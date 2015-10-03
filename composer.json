@@ -8,5 +8,7 @@
             "email": "simpkevin@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "ocramius/proxy-manager": "^1.0"
+    }
 }
