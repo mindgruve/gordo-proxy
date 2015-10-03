@@ -1,0 +1,12 @@
+{
+    "name": "swimson/poncho",
+    "description": "Extend your doctrine proxies with Poncho",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin",
+            "email": "simpkevin@gmail.com"
+        }
+    ],
+    "require": {}
+}
