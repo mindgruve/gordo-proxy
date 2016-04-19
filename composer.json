@@ -1,14 +1,26 @@
 {
-    "name": "swimson/poncho",
-    "description": "Extend your doctrine proxies with Poncho",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Kevin",
-            "email": "simpkevin@gmail.com"
-        }
-    ],
-    "require": {
-        "ocramius/proxy-manager": "^1.0"
+  "name": "swimson/poncho",
+  "description": "Extend your doctrine proxies with Poncho",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Kevin",
+      "email": "simpkevin@gmail.com"
     }
+  ],
+  "require": {
+    "ocramius/proxy-manager": "^1.0",
+    "phpunit/phpunit": "4.8",
+    "ocramius/generated-hydrator": "^1.1",
+    "doctrine/orm": "^2.5"
+  },
+  "config": {
+    "bin-dir": "bin"
+  },
+  "autoload": {
+    "psr-0": {
+      "Poncho\\": "src",
+      "PonchoTests\\": "tests"
+    }
+  }
 }
