@@ -2,12 +2,12 @@
 
 namespace Poncho\Examples\Encryption;
 
+
 /**
  * @Entity
  */
 class Message
 {
-
     /**
      * @Id @Column(type="integer")
      * @GeneratedValue
@@ -23,19 +23,6 @@ class Message
     /** @Column(length=140, name="email") */
     protected $email;
 
-    /**
-     * @ManyToOne(targetEntity="Attachment")
-     * @JoinColumn(name="attachment_id", referencedColumnName="id")
-     */
-    protected $attachments;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     /**
      * @return mixed
@@ -52,7 +39,6 @@ class Message
     public function setMessage($message)
     {
         $this->message = $message;
-
         return $this;
     }
 
@@ -71,7 +57,6 @@ class Message
     public function setDate(\DateTime $date)
     {
         $this->date = $date;
-
         return $this;
     }
 
@@ -90,7 +75,6 @@ class Message
     public function setEmail($email)
     {
         $this->email = $email;
-
         return $this;
     }
 
