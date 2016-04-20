@@ -2,30 +2,35 @@
 
 namespace Poncho\Examples\Encryption;
 
+use Poncho\Annotations\Proxy AS PROXY;
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
+ * @ORM\Entity
+ * @PROXY(viewModel="Poncho\Examples\Encryption\MessageViewModel",factory="Poncho\Examples\Encryption\MessageViewModelFactory")
  */
+
 class Message
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
 
-    /** @Column(length=140, name="message") */
+    /** @ORM\Column(length=140, name="message") */
     protected $message;
 
-    /** @Column(type="datetime", name="date") */
+    /** @ORM\Column(type="datetime", name="date") */
     protected $date;
 
-    /** @Column(length=140, name="email") */
+    /** @ORM\Column(length=140, name="email") */
     protected $email;
 
     /**
-     * @ManyToOne(targetEntity="Attachment")
-     * @JoinColumn(name="attachment_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Attachment")
+     * @ORM\JoinColumn(name="attachment_id", referencedColumnName="id")
      */
     protected $attachments;
 
