@@ -5,4 +5,4 @@ $loader = include_once(__DIR__ . '/vendor/autoload.php');
 use Doctrine\Common\Annotations\AnnotationReader;
 
 $reader = new AnnotationReader();
-var_dump($reader->getClassAnnotations(new ReflectionClass('Poncho\Examples\Encryption\Message')));
+var_dump($reader->getClassAnnotations(new ReflectionClass('Mindgruve\Gordo\Examples\Encryption\Message')));

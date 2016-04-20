@@ -1,6 +1,6 @@
 <?php
 
-namespace Poncho\Examples\Encryption;
+namespace Mindgruve\Gordo\Examples\Encryption;
 
 /**
  * @Entity

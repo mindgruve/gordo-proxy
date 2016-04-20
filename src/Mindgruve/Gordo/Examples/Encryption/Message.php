@@ -1,13 +1,13 @@
 <?php
 
-namespace Poncho\Examples\Encryption;
+namespace Mindgruve\Gordo\Examples\Encryption;
 
-use Poncho\Annotations\Proxy AS PROXY;
+use Mindgruve\Gordo\Annotations AS Gordo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @PROXY(viewModel="Poncho\Examples\Encryption\MessageViewModel",factory="Poncho\Examples\Encryption\MessageViewModelFactory")
+ * @Gordo(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
  */
 
 class Message
