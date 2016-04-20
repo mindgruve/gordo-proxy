@@ -2,19 +2,21 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
- * @Entity
+ * @ORM\Entity
  */
 class Attachment
 {
 
     /**
-     * @Id @Column(type="integer")
-     * @GeneratedValue
+     * @ORM\Id @Column(type="integer")
+     * @ORM\GeneratedValue
      */
     private $id;
 
-    /** @Column(length=140, name="filename") */
+    /** @ORM\Column(length=140, name="filename") */
     protected $filename;
 
 }

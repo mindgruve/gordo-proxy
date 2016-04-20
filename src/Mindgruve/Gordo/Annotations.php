@@ -14,6 +14,4 @@ class Annotations
      */
     public $domainModel;
 
-
-
 }

@@ -2,12 +2,13 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption;
 
-use Mindgruve\Gordo\Annotations AS Gordo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Mindgruve\Gordo\Annotations as DomainModel;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @Gordo(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
+ * @DomainModel(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
  */
 
 class Message
@@ -97,6 +98,20 @@ class Message
         $this->email = $email;
 
         return $this;
+    }
+
+    /**
+     * @param ArrayCollection $a
+     */
+    public function setAttachments(ArrayCollection $a){
+        $this->attachments = $a;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAttachments(){
+        return $this->attachments;
     }
 
 }
