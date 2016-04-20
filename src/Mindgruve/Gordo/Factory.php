@@ -37,6 +37,12 @@ class Factory
         return null;
     }
 
+    /**
+     * Build the domain model based on the annotations in the class
+     *
+     * @param $obj
+     * @return \ProxyManager\Proxy\VirtualProxyInterface
+     */
     public function buildDomainModel($obj)
     {
         $class = get_class($obj);
