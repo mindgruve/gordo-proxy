@@ -3,35 +3,35 @@
 namespace Mindgruve\Gordo\Examples\Encryption;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Mindgruve\Gordo\Annotations as DomainModel;
+use Mindgruve\Gordo\Domain\Annotations as Domain;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @DomainModel(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
+ * @Entity
+ * @Domain(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
  */
 
 class Message
 {
 
     /**
-     * @ORM\Id @Column(type="integer")
-     * @ORM\GeneratedValue
+     * @Id @Column(type="integer")
+     * @GeneratedValue
      */
     private $id;
 
-    /** @ORM\Column(length=140, name="message") */
+    /** @Column(length=140, name="message") */
     protected $message;
 
-    /** @ORM\Column(type="datetime", name="date") */
+    /** @Column(type="datetime", name="date") */
     protected $date;
 
-    /** @ORM\Column(length=140, name="email") */
+    /** @Column(length=140, name="email") */
     protected $email;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Attachment")
-     * @ORM\JoinColumn(name="attachment_id", referencedColumnName="id")
+     * @ManyToOne(targetEntity="Attachment")
+     * @JoinColumn(name="attachment_id", referencedColumnName="id")
      */
     protected $attachments;
 

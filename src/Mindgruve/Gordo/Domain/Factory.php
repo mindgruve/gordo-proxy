@@ -1,40 +1,26 @@
 <?php
 
-namespace Mindgruve\Gordo;
+namespace Mindgruve\Gordo\Domain;
 
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Mindgruve\Gordo\Domain\Hydrator as DomainHydrator;
+use Mindgruve\Gordo\Domain\Annotations as DomainAnnotations;
 
 class Factory
 {
     /**
-     * @var AnnotationReader
+     * @var MetaDataReader
      */
     protected $reader;
+
 
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(MetaDataReader $reader)
     {
-        $this->reader = new AnnotationReader();
-    }
-
-    /**
-     * @param $class
-     * @return \Mindgruve\Gordo\Annotations | null
-     */
-    public function getAnnotations($class)
-    {
-        $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof \Mindgruve\Gordo\Annotations) {
-                return $annotation;
-            }
-        }
-
-        return null;
+        $this->reader = $reader;
     }
 
     /**
@@ -46,11 +32,11 @@ class Factory
     public function buildDomainModel($obj)
     {
         $class = get_class($obj);
-        $hydrator = new \Mindgruve\Gordo\Hydrator($class);
+        $hydrator = new DomainHydrator($class);
 
         $domainModelClass = $class;
-        $annotations = $this->getAnnotations($class);
-        if($annotations){
+        $annotations = $this->reader->getDomainAnnotations($class);
+        if ($annotations) {
             $domainModelClass = $annotations->domainModel;
         }
 

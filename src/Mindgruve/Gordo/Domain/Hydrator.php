@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo;
+namespace Mindgruve\Gordo\Domain;
 
 use GeneratedHydrator\Configuration;
 
