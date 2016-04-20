@@ -17,7 +17,7 @@ class Hydrator
     /**
      * @var MetaDataReader
      */
-    protected $reader;
+    protected $metaDataReader;
 
     /**
      * @var Factory
@@ -27,10 +27,10 @@ class Hydrator
     /**
      * @param $class
      */
-    public function __construct($class, MetaDataReader $reader, Factory $factory)
+    public function __construct($class, MetaDataReader $metaDataReader, Factory $factory)
     {
         $this->class = $class;
-        $this->reader = $reader;
+        $this->metaDataReader = $metaDataReader;
         $this->factory = $factory;
 
         $config = new Configuration($class);
@@ -75,15 +75,35 @@ class Hydrator
         return $this->hydrate($data, $objDest);
     }
 
-    public function buildDomainModel($objSrc)
+    /**
+     * @return string
+     */
+    public function getDomainModelClass()
     {
-        $data = $this->extract($objSrc);
-        $domainAnnotations = $this->reader->getDomainAnnotations($this->class);
+        $domainModelClass = $this->class;
+        $domainAnnotations = $this->metaDataReader->getDomainAnnotations($this->class);
 
         if ($domainAnnotations) {
 
             $domainModelClass = $domainAnnotations->domainModel;
-            $entityAnnotations = $this->reader->getEntityAnnotations($this->class);
+        }
+
+        return $domainModelClass;
+    }
+
+    /**
+     * @param $objSrc
+     * @return object
+     */
+    public function buildDomainModel($objSrc)
+    {
+        $data = $this->extract($objSrc);
+
+        $domainModelClass = $this->getDomainModelClass();
+
+        if ($domainModelClass != $this->class) {
+
+            $entityAnnotations = $this->metaDataReader->getEntityAnnotations($this->class);
             $associations = $entityAnnotations->getAssociationMappings();
 
             foreach ($associations as $key => $association) {

@@ -24,6 +24,14 @@ $conn = array(
 );
 $entityManager = \Doctrine\ORM\EntityManager::create($conn, $config);
 
+$reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
 $metaDataReader = new \Mindgruve\Gordo\Domain\MetaDataReader(new \Doctrine\Common\Annotations\SimpleAnnotationReader(), $entityManager);
 $domainFactory = new \Mindgruve\Gordo\Domain\Factory($metaDataReader);
 $messageModel = $domainFactory->buildDomainModel($message);
+
+//$attachmentModel = $domainFactory->buildDomainModel($attachment);
+
+$attachments = $messageModel->getAttachments();
+foreach($attachments as $attachment){
+    echo $attachment->getRand();
+}

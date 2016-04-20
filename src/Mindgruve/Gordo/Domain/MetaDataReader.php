@@ -12,7 +12,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
-use Mindgruve\Gordo\Domain\Annotations as DomainAnnotations;
+use Mindgruve\Gordo\Domain\DomainMapping as DomainAnnotations;
 
 class MetaDataReader
 {
@@ -34,7 +34,7 @@ class MetaDataReader
     public function __construct(
         ReaderInterface $reader,
         EntityManagerInterface $em,
-        array $namespaces = array('Doctrine\ORM\Mapping'),
+        array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Domain'),
         CacheProvider $cacheProvider = null
     ) {
 
@@ -53,15 +53,29 @@ class MetaDataReader
 
     /**
      * @param $class
-     * @return null | Annotations
+     * @return null | DomainMapping
      */
     public function getDomainAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof DomainAnnotations) {
+            if ($annotation instanceof DomainMapping) {
                 return $annotation;
             }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $class
+     * @return null|string
+     */
+    public function getDomainModelClass($class)
+    {
+        $annotations = $this->getDomainAnnotations($class);
+        if ($annotations) {
+            return $annotations->domainModel;
         }
 
         return null;

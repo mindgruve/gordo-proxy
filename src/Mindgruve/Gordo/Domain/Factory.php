@@ -5,22 +5,25 @@ namespace Mindgruve\Gordo\Domain;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 use Mindgruve\Gordo\Domain\Hydrator as DomainHydrator;
-use Mindgruve\Gordo\Domain\Annotations as DomainAnnotations;
 
 class Factory
 {
     /**
      * @var MetaDataReader
      */
-    protected $reader;
+    protected $metaDataReader;
 
+    /**
+     * @var array
+     */
+    protected $hydrators = array();
 
     /**
      * Constructor
      */
-    public function __construct(MetaDataReader $reader)
+    public function __construct(MetaDataReader $metaDataReader)
     {
-        $this->reader = $reader;
+        $this->metaDataReader = $metaDataReader;
     }
 
     /**
@@ -32,23 +35,29 @@ class Factory
     public function buildDomainModel($obj)
     {
         $class = get_class($obj);
-        $hydrator = new DomainHydrator($class, $this->reader, $this);
-
         $factory = new LazyLoadingValueHolderFactory();
+        $hydrators = &$this->hydrators;
         $initializer = function (
             & $wrappedObject,
             LazyLoadingInterface $proxy,
             $method,
             array $parameters,
             & $initializer
-        ) use ($obj, $hydrator) {
-
+        ) use ($obj, $class, & $hydrators) {
             $initializer = null;
+
+            if (isset($hydrators[$class])) {
+                $hydrator = $hydrators[$class];
+            } else {
+                $hydrator = new DomainHydrator($class, $this->metaDataReader, $this);
+                $hydrators[$class] = $hydrator;
+            }
+
             $wrappedObject = $hydrator->buildDomainModel($obj);
 
             return true;
         };
 
-        return $factory->createProxy($class, $initializer);
+        return $factory->createProxy($this->metaDataReader->getDomainModelClass($class), $initializer);
     }
 }

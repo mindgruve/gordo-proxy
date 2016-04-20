@@ -3,12 +3,11 @@
 namespace Mindgruve\Gordo\Examples\Encryption;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Mindgruve\Gordo\Domain\Annotations as Domain;
-use Doctrine\ORM\Mapping as ORM;
+use Mindgruve\Gordo\Domain\DomainMapping;
 
 /**
  * @Entity
- * @Domain(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
+ * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
  */
 
 class Message

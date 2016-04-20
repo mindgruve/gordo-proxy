@@ -6,7 +6,7 @@ namespace Mindgruve\Gordo\Domain;
  * @Annotation
  * @Target("CLASS")
  */
-class Annotations
+class DomainMapping
 {
 
     /**

@@ -2,23 +2,22 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption;
 
-use Doctrine\ORM\Mapping as ORM;
-use Mindgruve\Gordo\Domain\Annotations as Domain;
+use Mindgruve\Gordo\Domain\DomainMapping;
 
 /**
- * @ORM\Entity
- * @Domain(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
+ * @Entity
+ * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\AttachmentModel")
  */
 class Attachment
 {
 
     /**
-     * @ORM\Id @Column(type="integer")
+     * @Id @Column(type="integer")
      * @ORM\GeneratedValue
      */
     private $id;
 
-    /** @ORM\Column(length=140, name="filename") */
+    /** @Column(length=140, name="filename") */
     protected $filename;
 
 }
