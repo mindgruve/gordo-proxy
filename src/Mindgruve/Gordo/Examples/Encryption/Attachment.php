@@ -3,9 +3,11 @@
 namespace Mindgruve\Gordo\Examples\Encryption;
 
 use Doctrine\ORM\Mapping as ORM;
+use Mindgruve\Gordo\Domain\Annotations as Domain;
 
 /**
  * @ORM\Entity
+ * @Domain(domainModel="Mindgruve\Gordo\Examples\Encryption\MessageModel")
  */
 class Attachment
 {

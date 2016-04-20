@@ -25,8 +25,5 @@ $conn = array(
 $entityManager = \Doctrine\ORM\EntityManager::create($conn, $config);
 
 $metaDataReader = new \Mindgruve\Gordo\Domain\MetaDataReader(new \Doctrine\Common\Annotations\SimpleAnnotationReader(), $entityManager);
-
 $domainFactory = new \Mindgruve\Gordo\Domain\Factory($metaDataReader);
 $messageModel = $domainFactory->buildDomainModel($message);
-var_dump($messageModel->getEmail());
-exit;

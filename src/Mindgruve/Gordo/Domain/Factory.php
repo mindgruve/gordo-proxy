@@ -32,13 +32,7 @@ class Factory
     public function buildDomainModel($obj)
     {
         $class = get_class($obj);
-        $hydrator = new DomainHydrator($class);
-
-        $domainModelClass = $class;
-        $annotations = $this->reader->getDomainAnnotations($class);
-        if ($annotations) {
-            $domainModelClass = $annotations->domainModel;
-        }
+        $hydrator = new DomainHydrator($class, $this->reader, $this);
 
         $factory = new LazyLoadingValueHolderFactory();
         $initializer = function (
@@ -47,17 +41,14 @@ class Factory
             $method,
             array $parameters,
             & $initializer
-        ) use ($hydrator, $obj, $domainModelClass) {
+        ) use ($obj, $hydrator) {
+
             $initializer = null;
-            $wrappedObject = $obj;
+            $wrappedObject = $hydrator->buildDomainModel($obj);
 
-            if ($domainModelClass) {
-                $wrappedObject = $hydrator->transfer($obj, new $domainModelClass());
-            }
-
-            return true; // confirm that initialization occurred correctly
+            return true;
         };
 
-        return $factory->createProxy($domainModelClass, $initializer);
+        return $factory->createProxy($class, $initializer);
     }
 }

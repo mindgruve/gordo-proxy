@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gordo\Domain;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use GeneratedHydrator\Configuration;
 
 class Hydrator
@@ -14,11 +15,23 @@ class Hydrator
     protected $hydrator;
 
     /**
+     * @var MetaDataReader
+     */
+    protected $reader;
+
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
      * @param $class
      */
-    public function __construct($class)
+    public function __construct($class, MetaDataReader $reader, Factory $factory)
     {
         $this->class = $class;
+        $this->reader = $reader;
+        $this->factory = $factory;
 
         $config = new Configuration($class);
         $hydratorClass = $config->createFactory()->getHydratorClass();
@@ -60,5 +73,34 @@ class Hydrator
         $data = $this->extract($objSrc);
 
         return $this->hydrate($data, $objDest);
+    }
+
+    public function buildDomainModel($objSrc)
+    {
+        $data = $this->extract($objSrc);
+        $domainAnnotations = $this->reader->getDomainAnnotations($this->class);
+
+        if ($domainAnnotations) {
+
+            $domainModelClass = $domainAnnotations->domainModel;
+            $entityAnnotations = $this->reader->getEntityAnnotations($this->class);
+            $associations = $entityAnnotations->getAssociationMappings();
+
+            foreach ($associations as $key => $association) {
+                if (isset($data[$key])) {
+                    $collection = $data[$key];
+                    $items = array();
+                    foreach ($collection as $item) {
+                        $items[] = $this->factory->buildDomainModel($item);
+                    }
+                    $data[$key] = new ArrayCollection($items);
+                }
+            }
+            $objDest = new $domainModelClass();
+
+            return $this->hydrate($data, $objDest);
+        }
+
+        return $objSrc;
     }
 }
