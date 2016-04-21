@@ -4,15 +4,22 @@ namespace Mindgruve\Gordo\Domain;
 
 trait EntityProxyTrait
 {
-    protected $entity = null;
+    protected $entity;
+
+    /**
+     * @var Hydrator
+     */
+    protected $hydrator;
 
     public function getEntity()
     {
         return $this->entity;
     }
 
-    public function setEntity($entity){
-        $this->entity = $entity;
+    public function syncEntity()
+    {
+        $this->hydrator->transfer($this, $this->entity);
     }
+
 
 }

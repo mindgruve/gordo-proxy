@@ -5,10 +5,10 @@ namespace Mindgruve\Gordo\Domain;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use GeneratedHydrator\Configuration;
-use ProxyManager\Factory\LazyLoadingValueHolderFactory;
-use ProxyManager\Proxy\LazyLoadingInterface;
+use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
+use Doctrine\Common\Inflector\Inflector;
 
-class EntityDecorator
+class EntityTransformer
 {
 
     /**
@@ -49,7 +49,8 @@ class EntityDecorator
     public function __construct(
         $class,
         EntityManagerInterface $em,
-        AnnotationReader $annotationReader = null
+        AnnotationReader $annotationReader = null,
+        Hydrator $hydrator = null
     ) {
         $this->em = $em;
         if (!$annotationReader) {
@@ -59,9 +60,10 @@ class EntityDecorator
         $this->class = $class;
         $this->annotationReader = $annotationReader;
 
-        $config = new Configuration($class);
-        $hydratorClass = $config->createFactory()->getHydratorClass();
-        $this->hydrator = new $hydratorClass();
+        if(!$hydrator){
+            $hydrator = new Hydrator($class, $annotationReader);
+        }
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -70,7 +72,7 @@ class EntityDecorator
      */
     public function transform($objSrc)
     {
-        $data = $this->hydrator->extract($objSrc);
+        $objSrcData = $this->hydrator->extract($objSrc);
         $entityProxyClass = $this->annotationReader->getModelProxyClass(get_class($objSrc));
         if ($entityProxyClass != $this->class) {
 
@@ -78,25 +80,61 @@ class EntityDecorator
             $associations = $entityAnnotations->getAssociationMappings();
 
             foreach ($associations as $key => $association) {
-                if (isset($data[$key])) {
-                    $collection = $data[$key];
+                if (isset($objSrcData[$key])) {
+                    $collection = $objSrcData[$key];
                     $items = array();
                     foreach ($collection as $item) {
                         $items[] = $item;
                     }
-                    $data[$key] = new ArrayCollection($items);
+                    $objSrcData[$key] = new ArrayCollection($items);
                 }
             }
             $objDest = $this->instantiate($entityProxyClass);
+            $this->hydrator->hydrate($objSrcData, $objDest);
 
             /**
              * Check if EntityProxy
              */
-            if($this->isEntityProxy($objDest)){
-                $objDest->setEntity($objSrc);
+            if ($this->isEntityProxy($objDest)) {
+
+                $reflectionClass = new \ReflectionClass($objDest);
+
+                $reflectionProperty = $reflectionClass->getProperty('entity');
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($objDest, $objSrc);
+                $reflectionProperty->setAccessible(false);
+
+                $reflectionProperty = $reflectionClass->getProperty('hydrator');
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($objDest, $this->hydrator);
+                $reflectionProperty->setAccessible(false);
+
+                $proxiedMethods = array();
+                foreach(array_keys($objSrcData) as $property){
+                    $proxiedMethods[] = Inflector::camelize('set_'.$property);
+                }
+                foreach($associations as $associationKey => $association){
+                    $associationKey = Inflector::singularize($associationKey);
+                    $proxiedMethods[] = Inflector::camelize('add_'.$associationKey);
+                    $proxiedMethods[] = Inflector::camelize('remove_'.$associationKey);
+                }
+
+                $factory = new Factory();
+                $proxy = $factory->createProxy($objDest, array());
+                foreach($proxiedMethods as $proxiedMethod){
+                    $proxy->setMethodSuffixInterceptor(
+                        $proxiedMethod,
+                        function ($proxy, $instance, $method, $params) {
+                            $instance->syncEntity();
+                        }
+                    );
+                }
+
+                return $proxy;
+
             }
 
-            return $this->hydrator->hydrate($data, $objDest);
+            return $objDest;
         }
 
         return $objSrc;
@@ -113,8 +151,9 @@ class EntityDecorator
         return $this;
     }
 
-    protected function isEntityProxy($obj){
-        if(array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait',class_uses($obj))){
+    protected function isEntityProxy($obj)
+    {
+        if (array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait', class_uses($obj))) {
             return true;
         }
 
