@@ -22,10 +22,10 @@ class TransformMapping
     /**
      * @var array
      */
-    public $syncedProperties;
+    public $syncedProperties = array();
 
     /**
      * @var array
      */
-    public $syncListeners;
+    public $syncListeners = array();
 }

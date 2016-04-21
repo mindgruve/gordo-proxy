@@ -18,16 +18,20 @@ class AnnotationReader
 {
 
     /**
+     * Reference to EntityManager
      * @var EntityManagerInterface
      */
     protected $em;
 
     /**
+     * Reference to Annotation Reader
      * @var CachedReader|ReaderInterface
      */
     protected $reader;
 
     /**
+     * Constructor
+     *
      * @param EntityManagerInterface $em
      * @param ReaderInterface $reader
      * @param array $namespaces
@@ -58,6 +62,8 @@ class AnnotationReader
     }
 
     /**
+     * Annotations specifically related to Entity Transformation as defined in the TransformMapping class
+     *
      * @param $class
      * @return null | TransformMapping
      */
@@ -74,6 +80,8 @@ class AnnotationReader
     }
 
     /**
+     * The target class to be created
+     *
      * @param $class
      * @return null|string
      */
@@ -88,6 +96,8 @@ class AnnotationReader
     }
 
     /**
+     * Default properties that will be copied over to entity when syncEntity is called
+     *
      * @param $class
      * @return array|null
      */
@@ -101,6 +111,8 @@ class AnnotationReader
     }
 
     /**
+     * Enable/Disable automatic syncing when methods are called on the class
+     *
      * @param $class
      * @return bool
      */
@@ -114,6 +126,8 @@ class AnnotationReader
     }
 
     /**
+     * Methods that will call the entitySync() method
+     *
      * @param $class
      * @return array|null
      */
@@ -127,6 +141,8 @@ class AnnotationReader
     }
 
     /**
+     * Doctrine Entity annotations including references
+     *
      * @param $class
      * @return \Doctrine\ORM\Mapping\ClassMetadata
      */

@@ -41,6 +41,8 @@ class EntityTransformer
     protected $entityDecorators = array();
 
     /**
+     * Constructor
+     *
      * @param $class
      * @param EntityManagerInterface $em
      * @param AnnotationReader $annotationReader
@@ -66,6 +68,9 @@ class EntityTransformer
     }
 
     /**
+     * Transform Entity to a new Object
+     * If the target Object has the EntityProxy trait, then it will also generate a proxy class
+     *
      * @param $objSrc
      * @return mixed
      */
@@ -139,12 +144,11 @@ class EntityTransformer
                         }
                     }
 
-
                     foreach ($syncedListeners as $syncListener) {
                         $proxy->setMethodSuffixInterceptor(
                             $syncListener,
                             function ($proxy, $instance) {
-                                $instance->syncEntity();
+                                $instance->syncToEntity();
                             }
                         );
                     }
@@ -162,6 +166,8 @@ class EntityTransformer
     }
 
     /**
+     * Register a factory for the target Object
+     *
      * @param FactoryInterface $factory
      * @return $this
      */
@@ -173,6 +179,8 @@ class EntityTransformer
     }
 
     /**
+     * Checks if the target object has the EntityProxy trait
+     *
      * @param $obj
      * @return bool
      */
@@ -186,6 +194,8 @@ class EntityTransformer
     }
 
     /**
+     * Create a new target object, optionally using a factory method
+     *
      * @param $entityProxyClass
      * @return object
      */
