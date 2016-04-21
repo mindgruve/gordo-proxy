@@ -27,11 +27,6 @@ class EntityDecorator
     protected $annotationReader;
 
     /**
-     * @var ProxyFactory
-     */
-    protected $factory;
-
-    /**
      * @var
      */
     protected $hydrator;
@@ -74,8 +69,8 @@ class EntityDecorator
     public function decorate($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
-        $domainModelClass = $this->annotationReader->getProxyModelClass(get_class($objSrc));
-        if ($domainModelClass != $this->class) {
+        $entityProxyClass = $this->annotationReader->getModelProxyClass(get_class($objSrc));
+        if ($entityProxyClass != $this->class) {
 
             $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
             $associations = $entityAnnotations->getAssociationMappings();
@@ -91,7 +86,7 @@ class EntityDecorator
                     $data[$key] = new ArrayCollection($items);
                 }
             }
-            $objDest = $this->instantiate($domainModelClass);
+            $objDest = $this->instantiate($entityProxyClass);
 
             return $this->hydrator->hydrate($data, $objDest);
         }
@@ -111,22 +106,22 @@ class EntityDecorator
     }
 
     /**
-     * @param $domainModelClass
+     * @param $entityProxyClass
      * @return object
      */
-    protected function instantiate($domainModelClass)
+    protected function instantiate($entityProxyClass)
     {
         foreach ($this->loaders as $loader) {
 
             /**
              * @var LoaderInterface $loader
              */
-            if ($loader->supports($domainModelClass)) {
-                return $loader->buildDomainModel($domainModelClass);
+            if ($loader->supports($entityProxyClass)) {
+                return $loader->buildDomainModel($entityProxyClass);
             }
         }
 
-        return new $domainModelClass();
+        return new $entityProxyClass();
 
     }
 
@@ -160,7 +155,7 @@ class EntityDecorator
             return true;
         };
 
-        return $factory->createProxy($this->annotationReader->getProxyModelClass($class), $initializer);
+        return $factory->createProxy($this->annotationReader->getModelProxyClass($class), $initializer);
     }
 
 }
