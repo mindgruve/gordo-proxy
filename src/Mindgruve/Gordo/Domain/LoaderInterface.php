@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Domain;
 
-interface DependencyFactoryInterface
+interface LoaderInterface
 {
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption;
 
-use Mindgruve\Gordo\Domain\DependencyFactoryInterface;
+use Mindgruve\Gordo\Domain\LoaderInterface;
 
-class AttachmentFactory implements DependencyFactoryInterface
+class AttachmentFactory implements LoaderInterface
 {
     /**
      * @param $domainModelClass

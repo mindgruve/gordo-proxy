@@ -53,6 +53,10 @@ class DomainModelFactory
             $metaDataReader = new AnnotationReader($em);
         }
 
+        if(!$proxyFactory){
+            $proxyFactory = new ProxyFactory($em, $metaDataReader);
+        }
+
         $this->class = $class;
         $this->metaDataReader = $metaDataReader;
         $this->proxyFactory = $proxyFactory;
@@ -113,10 +117,10 @@ class DomainModelFactory
     }
 
     /**
-     * @param DependencyFactoryInterface $loader
+     * @param LoaderInterface $loader
      * @return $this
      */
-    public function registerLoader(DependencyFactoryInterface $loader)
+    public function registerLoader(LoaderInterface $loader)
     {
         $this->loaders[] = $loader;
         return $this;
@@ -131,7 +135,7 @@ class DomainModelFactory
         foreach ($this->loaders as $loader) {
 
             /**
-             * @var DependencyFactoryInterface $loader
+             * @var LoaderInterface $loader
              */
             if ($loader->supports($domainModelClass)) {
                 return $loader->buildDomainModel($domainModelClass);

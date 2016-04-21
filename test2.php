@@ -28,8 +28,7 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$proxyFactory = new ProxyFactory($entityManager);
-$domainFactory = new DomainModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $entityManager, $proxyFactory);
+$domainFactory = new DomainModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $entityManager);
 $domainFactory->registerLoader(new \Mindgruve\Gordo\Examples\Encryption\AttachmentFactory());
 $messageModel = $domainFactory->buildDomainModel($message);
 
