@@ -5,9 +5,8 @@ $loader = include_once(__DIR__ . '/vendor/autoload.php');
 
 use Mindgruve\Gordo\Examples\Encryption\Message;
 use Mindgruve\Gordo\Examples\Encryption\Attachment;
-use Mindgruve\Gordo\Domain\MetaDataReader;
-use Mindgruve\Gordo\Domain\Factory\ProxyFactory;
-use Mindgruve\Gordo\Domain\Factory\ModelFactory;
+use Mindgruve\Gordo\Domain\ProxyFactory;
+use Mindgruve\Gordo\Domain\DomainModelFactory;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Doctrine\ORM\EntityManager;
@@ -29,12 +28,12 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$metaDataReader = new MetaDataReader($entityManager);
-$proxyFactory = new ProxyFactory($metaDataReader);
-$domainFactory = new ModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $metaDataReader, $proxyFactory);
+$proxyFactory = new ProxyFactory($entityManager);
+$domainFactory = new DomainModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $entityManager, $proxyFactory);
+$domainFactory->registerDependencyLoader(new \Mindgruve\Gordo\Examples\Encryption\AttachmentFactory());
 $messageModel = $domainFactory->buildDomainModel($message);
 
 $attachments = $messageModel->getAttachments();
 foreach ($attachments as $attachment) {
-    echo $attachment->getRand();
+    echo $attachment->getRand().PHP_EOL;
 }

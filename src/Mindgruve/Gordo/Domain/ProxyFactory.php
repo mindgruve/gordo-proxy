@@ -1,13 +1,18 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain\Factory;
+namespace Mindgruve\Gordo\Domain;
 
-use Mindgruve\Gordo\Domain\MetaDataReader;
+use Doctrine\ORM\EntityManagerInterface;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
 
 class ProxyFactory
 {
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
+
     /**
      * @var MetaDataReader
      */
@@ -26,8 +31,14 @@ class ProxyFactory
     /**
      * Constructor
      */
-    public function __construct(MetaDataReader $metaDataReader)
+    public function __construct(EntityManagerInterface $em, MetaDataReader $metaDataReader = null)
     {
+        $this->em = $em;
+
+        if(!$metaDataReader){
+            $metaDataReader = new MetaDataReader($em);
+        }
+
         $this->metaDataReader = $metaDataReader;
     }
 
@@ -54,7 +65,7 @@ class ProxyFactory
             if (isset($domainFactories[$class])) {
                 $domainFactory = $domainFactories[$class];
             } else {
-                $domainFactory = new ModelFactory($class, $this->metaDataReader, $this);
+                $domainFactory = new DomainModelFactory($class, $this->em, $this, $this->metaDataReader);
                 $domainFactories[$class] = $domainFactory;
             }
 

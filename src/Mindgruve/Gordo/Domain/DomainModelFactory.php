@@ -1,18 +1,23 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain\Factory;
+namespace Mindgruve\Gordo\Domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use GeneratedHydrator\Configuration;
-use Mindgruve\Gordo\Domain\MetaDataReader;
 
-class ModelFactory
+class DomainModelFactory
 {
 
     /**
      * @var
      */
     protected $class;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    protected $em;
 
     /**
      * @var MetaDataReader
@@ -29,12 +34,25 @@ class ModelFactory
      */
     protected $hydrator;
 
+    /**
+     * @var array
+     */
+    protected $loaders = array();
 
     /**
      * @param $class
      */
-    public function __construct($class, MetaDataReader $metaDataReader, ProxyFactory $proxyFactory)
-    {
+    public function __construct(
+        $class,
+        EntityManagerInterface $em,
+        ProxyFactory $proxyFactory = null,
+        MetaDataReader $metaDataReader = null
+    ) {
+        $this->em = $em;
+        if (!$metaDataReader) {
+            $metaDataReader = new MetaDataReader($em);
+        }
+
         $this->class = $class;
         $this->metaDataReader = $metaDataReader;
         $this->proxyFactory = $proxyFactory;
@@ -78,17 +96,50 @@ class ModelFactory
                     $collection = $data[$key];
                     $items = array();
                     foreach ($collection as $item) {
-                        $items[] = $this->proxyFactory->createProxy($item);
+                        if ($this->proxyFactory) {
+                            $item = $this->proxyFactory->createProxy($item);
+                        }
+                        $items[] = $item;
                     }
                     $data[$key] = new ArrayCollection($items);
                 }
             }
-            $objDest = new $domainModelClass();
+            $objDest = $this->instantiate($domainModelClass);
 
             return $this->hydrator->hydrate($data, $objDest);
         }
 
         return $objSrc;
+    }
+
+    /**
+     * @param DependencyFactoryInterface $loader
+     * @return $this
+     */
+    public function registerDependencyLoader(DependencyFactoryInterface $loader)
+    {
+        $this->loaders[] = $loader;
+        return $this;
+    }
+
+    /**
+     * @param $domainModelClass
+     * @return object
+     */
+    protected function instantiate($domainModelClass)
+    {
+        foreach ($this->loaders as $loader) {
+
+            /**
+             * @var DependencyFactoryInterface $loader
+             */
+            if ($loader->supports($domainModelClass)) {
+                return $loader->buildDomainModel($domainModelClass);
+            }
+        }
+
+        return new $domainModelClass();
+
     }
 
 }
