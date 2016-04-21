@@ -29,7 +29,7 @@ $message->setAttachments(new ArrayCollection(array($attachment)));
 
 $entityDecorator = new EntityDecorator('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
 $entityDecorator->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
-$messageProxy = $entityDecorator->decorate($message);
+$messageProxy = $entityDecorator->transform($message);
 
 $messageProxy->setMessage('kevin');
 $messageProxy->setEmail('test@test.com');

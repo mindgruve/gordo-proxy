@@ -68,7 +68,7 @@ class EntityDecorator
      * @param $objSrc
      * @return mixed
      */
-    public function decorate($objSrc)
+    public function transform($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
         $entityProxyClass = $this->annotationReader->getModelProxyClass(get_class($objSrc));
@@ -92,7 +92,7 @@ class EntityDecorator
             /**
              * Check if EntityProxy
              */
-            if(array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait',class_uses($objDest))){
+            if($this->isEntityProxy($objDest)){
                 $objDest->setEntity($objSrc);
             }
 
@@ -111,6 +111,14 @@ class EntityDecorator
         $this->factories[] = $factory;
 
         return $this;
+    }
+
+    protected function isEntityProxy($obj){
+        if(array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait',class_uses($obj))){
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -132,38 +140,4 @@ class EntityDecorator
         return new $entityProxyClass();
 
     }
-
-    /**
-     * @param $obj
-     * @return \ProxyManager\Proxy\VirtualProxyInterface
-     */
-    protected function createLazyLoadingProxy($obj)
-    {
-        $class = get_class($obj);
-        $factory = new LazyLoadingValueHolderFactory();
-        $entityDecorators = &$this->entityDecorators;
-        $initializer = function (
-            & $wrappedObject,
-            LazyLoadingInterface $proxy,
-            $method,
-            array $parameters,
-            & $initializer
-        ) use ($obj, $class, & $entityDecorators) {
-            $initializer = null;
-
-            if (isset($entityDecorators[$class])) {
-                $entityDecorator = $entityDecorators[$class];
-            } else {
-                $entityDecorator = new EntityDecorator($class, $this->em, $this->annotationReader);
-                $entityDecorators[$class] = $entityDecorator;
-            }
-
-            $wrappedObject = $entityDecorator->decorate($obj);
-
-            return true;
-        };
-
-        return $factory->createProxy($this->annotationReader->getModelProxyClass($class), $initializer);
-    }
-
 }
