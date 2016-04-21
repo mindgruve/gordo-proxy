@@ -39,7 +39,7 @@ class EntityDecorator
     /**
      * @var array
      */
-    protected $domainFactories = array();
+    protected $entityDecorators = array();
 
     /**
      * @param $class
@@ -82,13 +82,19 @@ class EntityDecorator
                     $collection = $data[$key];
                     $items = array();
                     foreach ($collection as $item) {
-                        $item = $this->createLazyLoadingProxy($item);
                         $items[] = $item;
                     }
                     $data[$key] = new ArrayCollection($items);
                 }
             }
             $objDest = $this->instantiate($entityProxyClass);
+
+            /**
+             * Check if EntityProxy
+             */
+            if(array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait',class_uses($objDest))){
+                $objDest->setEntity($objSrc);
+            }
 
             return $this->hydrator->hydrate($data, $objDest);
         }
@@ -135,24 +141,24 @@ class EntityDecorator
     {
         $class = get_class($obj);
         $factory = new LazyLoadingValueHolderFactory();
-        $domainFactories = &$this->domainFactories;
+        $entityDecorators = &$this->entityDecorators;
         $initializer = function (
             & $wrappedObject,
             LazyLoadingInterface $proxy,
             $method,
             array $parameters,
             & $initializer
-        ) use ($obj, $class, & $domainFactories) {
+        ) use ($obj, $class, & $entityDecorators) {
             $initializer = null;
 
-            if (isset($domainFactories[$class])) {
-                $domainFactory = $domainFactories[$class];
+            if (isset($entityDecorators[$class])) {
+                $entityDecorator = $entityDecorators[$class];
             } else {
-                $domainFactory = new EntityDecorator($class, $this->em, $this->annotationReader);
-                $domainFactories[$class] = $domainFactory;
+                $entityDecorator = new EntityDecorator($class, $this->em, $this->annotationReader);
+                $entityDecorators[$class] = $entityDecorator;
             }
 
-            $wrappedObject = $domainFactory->decorate($obj);
+            $wrappedObject = $entityDecorator->decorate($obj);
 
             return true;
         };

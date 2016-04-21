@@ -32,4 +32,5 @@ $entityDecorator->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Facto
 $messageProxy = $entityDecorator->decorate($message);
 
 $messageProxy->setMessage('kevin');
-var_dump($messageProxy->getEncryptedMessage());
+$messageProxy->setEmail('test@test.com');
+var_dump($messageProxy->getEntity());
