@@ -22,7 +22,7 @@ class EntityDecorator
     /**
      * @var AnnotationReader
      */
-    protected $metaDataReader;
+    protected $annotationReader;
 
     /**
      * @var ProxyFactory
@@ -46,19 +46,19 @@ class EntityDecorator
         $class,
         EntityManagerInterface $em,
         ProxyFactory $proxyFactory = null,
-        AnnotationReader $metaDataReader = null
+        AnnotationReader $annotationReader = null
     ) {
         $this->em = $em;
-        if (!$metaDataReader) {
-            $metaDataReader = new AnnotationReader($em);
+        if (!$annotationReader) {
+            $annotationReader = new AnnotationReader($em);
         }
 
         if(!$proxyFactory){
-            $proxyFactory = new ProxyFactory($em, $metaDataReader);
+            $proxyFactory = new ProxyFactory($em, $annotationReader);
         }
 
         $this->class = $class;
-        $this->metaDataReader = $metaDataReader;
+        $this->annotationReader = $annotationReader;
         $this->proxyFactory = $proxyFactory;
 
         $config = new Configuration($class);
@@ -73,10 +73,10 @@ class EntityDecorator
     public function decorate($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
-        $domainModelClass = $this->metaDataReader->getProxyModelClass(get_class($objSrc));
+        $domainModelClass = $this->annotationReader->getProxyModelClass(get_class($objSrc));
         if ($domainModelClass != $this->class) {
 
-            $entityAnnotations = $this->metaDataReader->getEntityAnnotations($this->class);
+            $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
             $associations = $entityAnnotations->getAssociationMappings();
 
             foreach ($associations as $key => $association) {

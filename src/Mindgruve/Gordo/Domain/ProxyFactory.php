@@ -16,7 +16,7 @@ class ProxyFactory
     /**
      * @var AnnotationReader
      */
-    protected $metaDataReader;
+    protected $annotationReader;
 
     /**
      * @var array
@@ -31,15 +31,15 @@ class ProxyFactory
     /**
      * Constructor
      */
-    public function __construct(EntityManagerInterface $em, AnnotationReader $metaDataReader = null)
+    public function __construct(EntityManagerInterface $em, AnnotationReader $annotationReader = null)
     {
         $this->em = $em;
 
-        if(!$metaDataReader){
-            $metaDataReader = new AnnotationReader($em);
+        if(!$annotationReader){
+            $annotationReader = new AnnotationReader($em);
         }
 
-        $this->metaDataReader = $metaDataReader;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -65,7 +65,7 @@ class ProxyFactory
             if (isset($domainFactories[$class])) {
                 $domainFactory = $domainFactories[$class];
             } else {
-                $domainFactory = new EntityDecorator($class, $this->em, $this, $this->metaDataReader);
+                $domainFactory = new EntityDecorator($class, $this->em, $this, $this->annotationReader);
                 $domainFactories[$class] = $domainFactory;
             }
 
@@ -74,6 +74,6 @@ class ProxyFactory
             return true;
         };
 
-        return $factory->createProxy($this->metaDataReader->getProxyModelClass($class), $initializer);
+        return $factory->createProxy($this->annotationReader->getProxyModelClass($class), $initializer);
     }
 }
