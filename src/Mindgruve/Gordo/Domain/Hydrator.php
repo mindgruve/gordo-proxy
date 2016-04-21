@@ -62,12 +62,25 @@ class Hydrator
      *
      * @param $objSrc
      * @param $objDest
+     * @param array $properties
      * @return object
      */
-    public function transfer($objSrc, $objDest)
+    public function transfer($objSrc, $objDest, array $properties = null)
     {
-        $data = $this->extract($objSrc);
+        $srcData = $this->extract($objSrc);
+        $destData = $this->extract($objDest);
 
-        return $this->hydrate($data, $objDest);
+        if(is_null($properties)){
+            $properties = array_keys($srcData);
+        }
+
+        $newValues = $destData;
+        foreach($destData as $key => $value){
+            if(in_array($key, $properties)){
+                $newValues[$key] = $srcData[$key];
+            }
+        }
+
+        return $this->hydrate($newValues, $objDest);
     }
 }

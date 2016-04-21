@@ -129,7 +129,7 @@ class EntityTransformer
                     $proxy->setMethodSuffixInterceptor(
                         $proxiedMethod,
                         function ($proxy, $instance) {
-                            $instance->syncDataToEntity();
+                            $instance->syncEntity();
                         }
                     );
                 }
@@ -155,6 +155,10 @@ class EntityTransformer
         return $this;
     }
 
+    /**
+     * @param $obj
+     * @return bool
+     */
     protected function isEntityProxy($obj)
     {
         if (array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait', class_uses($obj))) {
