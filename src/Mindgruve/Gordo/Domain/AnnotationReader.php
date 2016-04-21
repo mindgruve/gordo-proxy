@@ -89,6 +89,45 @@ class AnnotationReader
 
     /**
      * @param $class
+     * @return array|null
+     */
+    public function getEntityTransformationSyncedProperties($class){
+        $annotations = $this->getTransformAnnotations($class);
+        if ($annotations) {
+            return $annotations->syncedProperties;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $class
+     * @return bool
+     */
+    public function getEntitySyncAuto($class){
+        $annotations = $this->getTransformAnnotations($class);
+        if ($annotations) {
+            return $annotations->syncAuto;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param $class
+     * @return array|null
+     */
+    public function getEntitySyncListeners($class){
+        $annotations = $this->getTransformAnnotations($class);
+        if ($annotations) {
+            return $annotations->syncListeners;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $class
      * @return \Doctrine\ORM\Mapping\ClassMetadata
      */
     public function getEntityAnnotations($class)

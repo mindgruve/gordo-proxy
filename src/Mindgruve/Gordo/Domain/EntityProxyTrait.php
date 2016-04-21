@@ -27,9 +27,12 @@ trait EntityProxyTrait
     /**
      * Sync the fields from the proxy --> entity
      */
-    public function syncEntity()
+    public function syncEntity(array $properties = null)
     {
-        $this->hydrator->transfer($this, $this->entity, $this->syncedProperties);
+        if(!$properties){
+            $properties = $this->syncedProperties;
+        }
+        $this->hydrator->transfer($this, $this->entity, $properties);
     }
 
 

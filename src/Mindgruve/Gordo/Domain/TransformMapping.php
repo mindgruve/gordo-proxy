@@ -14,4 +14,18 @@ class TransformMapping
      */
     public $target;
 
+    /**
+     * @var bool
+     */
+    public $syncAuto = true;
+
+    /**
+     * @var array
+     */
+    public $syncedProperties;
+
+    /**
+     * @var array
+     */
+    public $syncListeners;
 }

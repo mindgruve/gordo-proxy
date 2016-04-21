@@ -108,30 +108,47 @@ class EntityTransformer
                 $reflectionProperty->setValue($objDest, $this->hydrator);
                 $reflectionProperty->setAccessible(false);
 
+                $syncedPropertyAnnotations = $this->annotationReader->getEntityTransformationSyncedProperties($this->class);
+                if($syncedPropertyAnnotations){
+                    $syncedProperties = $syncedPropertyAnnotations;
+                } else {
+                    $syncedProperties = array_keys($objSrcData);
+                }
+
                 $reflectionProperty = $reflectionClass->getProperty('syncedProperties');
                 $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($objDest, array_keys($objSrcData));
+                $reflectionProperty->setValue($objDest, $syncedProperties);
                 $reflectionProperty->setAccessible(false);
-
-                $proxiedMethods = array();
-                foreach (array_keys($objSrcData) as $property) {
-                    $proxiedMethods[] = Inflector::camelize('set_' . $property);
-                }
-                foreach ($associations as $associationKey => $association) {
-                    $associationKey = Inflector::singularize($associationKey);
-                    $proxiedMethods[] = Inflector::camelize('add_' . $associationKey);
-                    $proxiedMethods[] = Inflector::camelize('remove_' . $associationKey);
-                }
 
                 $factory = new Factory();
                 $proxy = $factory->createProxy($objDest, array());
-                foreach ($proxiedMethods as $proxiedMethod) {
-                    $proxy->setMethodSuffixInterceptor(
-                        $proxiedMethod,
-                        function ($proxy, $instance) {
-                            $instance->syncEntity();
+
+                $syncAuto = $this->annotationReader->getEntitySyncAuto($this->class);
+                if($syncAuto){
+
+                    $syncedListeners = $this->annotationReader->getEntitySyncListeners($this->class);
+                    if(!$syncedListeners){
+                        $syncedListeners = array();
+                        foreach (array_keys($objSrcData) as $property) {
+                            $syncedListeners[] = Inflector::camelize('set_' . $property);
                         }
-                    );
+                        foreach ($associations as $associationKey => $association) {
+                            $associationKey = Inflector::singularize($associationKey);
+                            $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
+                            $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
+                        }
+                    }
+
+
+                    foreach ($syncedListeners as $syncListener) {
+                        $proxy->setMethodSuffixInterceptor(
+                            $syncListener,
+                            function ($proxy, $instance) {
+                                $instance->syncEntity();
+                            }
+                        );
+                    }
+
                 }
 
                 return $proxy;

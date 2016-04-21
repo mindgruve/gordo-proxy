@@ -33,4 +33,6 @@ $messageProxy = $entityDecorator->transform($message);
 
 $messageProxy->setMessage('kevin');
 $messageProxy->setEmail('test@test.com');
+//$messageProxy->setDate(new \DateTime('3/14/2015'));
+$messageProxy->syncEntity();
 var_dump($message->getEmail());
