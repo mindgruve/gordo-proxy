@@ -65,7 +65,7 @@ class ProxyFactory
             if (isset($domainFactories[$class])) {
                 $domainFactory = $domainFactories[$class];
             } else {
-                $domainFactory = new DomainModelFactory($class, $this->em, $this, $this->metaDataReader);
+                $domainFactory = new EntityDecorator($class, $this->em, $this, $this->metaDataReader);
                 $domainFactories[$class] = $domainFactory;
             }
 
