@@ -69,7 +69,7 @@ class ProxyFactory
                 $domainFactories[$class] = $domainFactory;
             }
 
-            $wrappedObject = $domainFactory->buildDomainModel($obj);
+            $wrappedObject = $domainFactory->decorate($obj);
 
             return true;
         };

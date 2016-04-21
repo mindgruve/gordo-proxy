@@ -27,11 +27,11 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$domainFactory = new EntityDecorator('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
-$domainFactory->registerLoader(new \Mindgruve\Gordo\Examples\Encryption\AttachmentFactory());
-$messageModel = $domainFactory->buildDomainModel($message);
+$entityDecorator = new EntityDecorator('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
+$entityDecorator->registerLoader(new \Mindgruve\Gordo\Examples\Encryption\Factories\AttachmentFactory());
+$message = $entityDecorator->decorate($message);
 
-$attachments = $messageModel->getAttachments();
+$attachments = $message->getAttachments();
 foreach ($attachments as $attachment) {
     echo $attachment->getRand().PHP_EOL;
 }

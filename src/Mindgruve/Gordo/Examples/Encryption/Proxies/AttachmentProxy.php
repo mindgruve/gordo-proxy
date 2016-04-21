@@ -1,10 +1,10 @@
 <?php
 
-namespace Mindgruve\Gordo\Examples\Encryption;
+namespace Mindgruve\Gordo\Examples\Encryption\Proxies;
 
 use Mindgruve\Gordo\Examples\Encryption\Entities\Attachment;
 
-class AttachmentModel extends Attachment
+class AttachmentProxy extends Attachment
 {
 
     public function getRand()

@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Examples\Encryption\Entities;
 
 /**
  * @Entity
- * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\AttachmentModel")
+ * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy")
  */
 class Attachment
 {

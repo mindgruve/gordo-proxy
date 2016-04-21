@@ -86,7 +86,7 @@ class EntityDecorator
      * @param $objSrc
      * @return object
      */
-    public function buildDomainModel($objSrc)
+    public function decorate($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
         $domainModelClass = $this->getDomainModelClass();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo\Examples\Encryption;
+namespace Mindgruve\Gordo\Examples\Encryption\Factories;
 
 use Mindgruve\Gordo\Domain\LoaderInterface;
 
