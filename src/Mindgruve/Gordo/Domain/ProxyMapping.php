@@ -6,12 +6,12 @@ namespace Mindgruve\Gordo\Domain;
  * @Annotation
  * @Target("CLASS")
  */
-class DomainMapping
+class ProxyMapping
 {
 
     /**
      * @var string
      */
-    public $domainModel;
+    public $proxy;
 
 }

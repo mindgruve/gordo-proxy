@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
- * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\Proxies\MessageProxy")
+ * @ProxyMapping(proxy="Mindgruve\Gordo\Examples\Encryption\Proxies\MessageProxy")
  */
 
 class Message

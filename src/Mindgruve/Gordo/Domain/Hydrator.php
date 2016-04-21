@@ -17,19 +17,19 @@ class Hydrator
     protected $hydrator;
 
     /**
-     * @var MetaDataReader
+     * @var AnnotationReader
      */
     protected $metaDataReader;
 
     /**
-     * @var DomainModelFactory
+     * @var ProxyFactory
      */
     protected $factory;
 
     /**
      * @param $class
      */
-    public function __construct($class, MetaDataReader $metaDataReader, ProxyFactory $factory)
+    public function __construct($class, AnnotationReader $metaDataReader, ProxyFactory $factory)
     {
         $this->class = $class;
         $this->metaDataReader = $metaDataReader;

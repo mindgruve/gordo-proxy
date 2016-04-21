@@ -67,29 +67,13 @@ class EntityDecorator
     }
 
     /**
-     * @return string
-     */
-    public function getDomainModelClass()
-    {
-        $domainModelClass = $this->class;
-        $domainAnnotations = $this->metaDataReader->getDomainAnnotations($this->class);
-
-        if ($domainAnnotations) {
-
-            $domainModelClass = $domainAnnotations->domainModel;
-        }
-
-        return $domainModelClass;
-    }
-
-    /**
      * @param $objSrc
      * @return object
      */
     public function decorate($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
-        $domainModelClass = $this->getDomainModelClass();
+        $domainModelClass = $this->metaDataReader->getDomainModelClass(get_class($objSrc));
         if ($domainModelClass != $this->class) {
 
             $entityAnnotations = $this->metaDataReader->getEntityAnnotations($this->class);

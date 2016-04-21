@@ -56,13 +56,13 @@ class AnnotationReader
 
     /**
      * @param $class
-     * @return null | DomainMapping
+     * @return null | ProxyMapping
      */
     public function getDomainAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof DomainMapping) {
+            if ($annotation instanceof ProxyMapping) {
                 return $annotation;
             }
         }
@@ -78,7 +78,7 @@ class AnnotationReader
     {
         $annotations = $this->getDomainAnnotations($class);
         if ($annotations) {
-            return $annotations->domainModel;
+            return $annotations->proxy;
         }
 
         return null;
