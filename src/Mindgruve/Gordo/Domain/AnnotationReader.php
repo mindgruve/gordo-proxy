@@ -74,7 +74,7 @@ class AnnotationReader
      * @param $class
      * @return null|string
      */
-    public function getDomainModelClass($class)
+    public function getProxyModelClass($class)
     {
         $annotations = $this->getDomainAnnotations($class);
         if ($annotations) {

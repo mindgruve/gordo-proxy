@@ -73,7 +73,7 @@ class EntityDecorator
     public function decorate($objSrc)
     {
         $data = $this->hydrator->extract($objSrc);
-        $domainModelClass = $this->metaDataReader->getDomainModelClass(get_class($objSrc));
+        $domainModelClass = $this->metaDataReader->getProxyModelClass(get_class($objSrc));
         if ($domainModelClass != $this->class) {
 
             $entityAnnotations = $this->metaDataReader->getEntityAnnotations($this->class);

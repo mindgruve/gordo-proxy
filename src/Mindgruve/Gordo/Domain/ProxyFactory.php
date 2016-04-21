@@ -74,6 +74,6 @@ class ProxyFactory
             return true;
         };
 
-        return $factory->createProxy($this->metaDataReader->getDomainModelClass($class), $initializer);
+        return $factory->createProxy($this->metaDataReader->getProxyModelClass($class), $initializer);
     }
 }
