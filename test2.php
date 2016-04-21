@@ -27,12 +27,12 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$entityDecorator = new EntityTransformer('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
-$entityDecorator->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
-$messageProxy = $entityDecorator->transform($message);
+$entityTransformer = new EntityTransformer('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
+$entityTransformer->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
+$messageProxy = $entityTransformer->transform($message);
 
 $messageProxy->setMessage('kevin');
 $messageProxy->setEmail('test@test.com');
 //$messageProxy->setDate(new \DateTime('3/14/2015'));
 $messageProxy->syncEntity();
-var_dump($message->getEmail());
+var_dump($message->getMessage());
