@@ -2,11 +2,15 @@
 
 namespace Mindgruve\Gordo\Domain;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use GeneratedHydrator\Configuration;
+use Mindgruve\Gordo\Domain\Factory\ModelFactory;
+use Mindgruve\Gordo\Domain\Factory\ProxyFactory;
 
 class Hydrator
 {
+    /**
+     * @var string
+     */
     protected $class;
 
     /**
@@ -20,14 +24,14 @@ class Hydrator
     protected $metaDataReader;
 
     /**
-     * @var Factory
+     * @var ModelFactory
      */
     protected $factory;
 
     /**
      * @param $class
      */
-    public function __construct($class, MetaDataReader $metaDataReader, Factory $factory)
+    public function __construct($class, MetaDataReader $metaDataReader, ProxyFactory $factory)
     {
         $this->class = $class;
         $this->metaDataReader = $metaDataReader;
@@ -73,54 +77,5 @@ class Hydrator
         $data = $this->extract($objSrc);
 
         return $this->hydrate($data, $objDest);
-    }
-
-    /**
-     * @return string
-     */
-    public function getDomainModelClass()
-    {
-        $domainModelClass = $this->class;
-        $domainAnnotations = $this->metaDataReader->getDomainAnnotations($this->class);
-
-        if ($domainAnnotations) {
-
-            $domainModelClass = $domainAnnotations->domainModel;
-        }
-
-        return $domainModelClass;
-    }
-
-    /**
-     * @param $objSrc
-     * @return object
-     */
-    public function buildDomainModel($objSrc)
-    {
-        $data = $this->extract($objSrc);
-
-        $domainModelClass = $this->getDomainModelClass();
-
-        if ($domainModelClass != $this->class) {
-
-            $entityAnnotations = $this->metaDataReader->getEntityAnnotations($this->class);
-            $associations = $entityAnnotations->getAssociationMappings();
-
-            foreach ($associations as $key => $association) {
-                if (isset($data[$key])) {
-                    $collection = $data[$key];
-                    $items = array();
-                    foreach ($collection as $item) {
-                        $items[] = $this->factory->buildDomainModel($item);
-                    }
-                    $data[$key] = new ArrayCollection($items);
-                }
-            }
-            $objDest = new $domainModelClass();
-
-            return $this->hydrate($data, $objDest);
-        }
-
-        return $objSrc;
     }
 }

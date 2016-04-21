@@ -3,35 +3,38 @@
 $loader = include_once(__DIR__ . '/vendor/autoload.php');
 \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader(array($loader, 'loadClass'));
 
-// Register the ORM Annotations in the AnnotationRegistry
+use Mindgruve\Gordo\Examples\Encryption\Message;
+use Mindgruve\Gordo\Examples\Encryption\Attachment;
+use Mindgruve\Gordo\Domain\MetaDataReader;
+use Mindgruve\Gordo\Domain\Factory\ProxyFactory;
+use Mindgruve\Gordo\Domain\Factory\ModelFactory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Tools\Setup as DoctrineSetup;
+use Doctrine\ORM\EntityManager;
 
 
-
-$message = new \Mindgruve\Gordo\Examples\Encryption\Message();
-$message->setEmail('ksimpson@mindgruve.com');
-$message->setDate(new \DateTime());
-$message->setMessage('woot');
-$attachment = new \Mindgruve\Gordo\Examples\Encryption\Attachment();
-$message->setAttachments(new \Doctrine\Common\Collections\ArrayCollection(array($attachment)));
-
-
-// Create a simple "default" Doctrine ORM configuration for Annotations
 $isDevMode = true;
-$config = \Doctrine\ORM\Tools\Setup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src"), $isDevMode);
+$config = DoctrineSetup::createAnnotationMetadataConfiguration(array(__DIR__ . "/src"), $isDevMode);
 $conn = array(
     'driver' => 'pdo_sqlite',
     'path'   => __DIR__ . '/db.sqlite',
 );
-$entityManager = \Doctrine\ORM\EntityManager::create($conn, $config);
+$entityManager = EntityManager::create($conn, $config);
 
-$reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
-$metaDataReader = new \Mindgruve\Gordo\Domain\MetaDataReader(new \Doctrine\Common\Annotations\SimpleAnnotationReader(), $entityManager);
-$domainFactory = new \Mindgruve\Gordo\Domain\Factory($metaDataReader);
+
+$message = new Message();
+$message->setEmail('ksimpson@mindgruve.com');
+$message->setDate(new \DateTime());
+$message->setMessage('woot');
+$attachment = new Attachment();
+$message->setAttachments(new ArrayCollection(array($attachment)));
+
+$metaDataReader = new MetaDataReader($entityManager);
+$proxyFactory = new ProxyFactory($metaDataReader);
+$domainFactory = new ModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $metaDataReader, $proxyFactory);
 $messageModel = $domainFactory->buildDomainModel($message);
 
-//$attachmentModel = $domainFactory->buildDomainModel($attachment);
-
 $attachments = $messageModel->getAttachments();
-foreach($attachments as $attachment){
+foreach ($attachments as $attachment) {
     echo $attachment->getRand();
 }

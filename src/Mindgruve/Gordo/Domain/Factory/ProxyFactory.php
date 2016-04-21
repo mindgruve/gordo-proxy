@@ -1,12 +1,12 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain;
+namespace Mindgruve\Gordo\Domain\Factory;
 
+use Mindgruve\Gordo\Domain\MetaDataReader;
 use ProxyManager\Factory\LazyLoadingValueHolderFactory;
 use ProxyManager\Proxy\LazyLoadingInterface;
-use Mindgruve\Gordo\Domain\Hydrator as DomainHydrator;
 
-class Factory
+class ProxyFactory
 {
     /**
      * @var MetaDataReader
@@ -16,7 +16,12 @@ class Factory
     /**
      * @var array
      */
-    protected $hydrators = array();
+    protected $domainFactories = array();
+
+    /**
+     * @var ProxyFactory
+     */
+    protected $proxyFactory;
 
     /**
      * Constructor
@@ -32,28 +37,28 @@ class Factory
      * @param $obj
      * @return \ProxyManager\Proxy\VirtualProxyInterface
      */
-    public function buildDomainModel($obj)
+    public function createProxy($obj)
     {
         $class = get_class($obj);
         $factory = new LazyLoadingValueHolderFactory();
-        $hydrators = &$this->hydrators;
+        $domainFactories = &$this->domainFactories;
         $initializer = function (
             & $wrappedObject,
             LazyLoadingInterface $proxy,
             $method,
             array $parameters,
             & $initializer
-        ) use ($obj, $class, & $hydrators) {
+        ) use ($obj, $class, & $domainFactories) {
             $initializer = null;
 
-            if (isset($hydrators[$class])) {
-                $hydrator = $hydrators[$class];
+            if (isset($domainFactories[$class])) {
+                $domainFactory = $domainFactories[$class];
             } else {
-                $hydrator = new DomainHydrator($class, $this->metaDataReader, $this);
-                $hydrators[$class] = $hydrator;
+                $domainFactory = new ModelFactory($class, $this->metaDataReader, $this);
+                $domainFactories[$class] = $domainFactory;
             }
 
-            $wrappedObject = $hydrator->buildDomainModel($obj);
+            $wrappedObject = $domainFactory->buildDomainModel($obj);
 
             return true;
         };
