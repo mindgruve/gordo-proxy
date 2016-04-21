@@ -97,12 +97,12 @@ class EntityDecorator
     }
 
     /**
-     * @param FactoryInterface $loader
+     * @param FactoryInterface $factory
      * @return $this
      */
-    public function registerLoader(FactoryInterface $loader)
+    public function registerFactory(FactoryInterface $factory)
     {
-        $this->factories[] = $loader;
+        $this->factories[] = $factory;
 
         return $this;
     }

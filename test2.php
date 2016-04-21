@@ -28,9 +28,8 @@ $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
 $entityDecorator = new EntityDecorator('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
-$entityDecorator->registerLoader(new \Mindgruve\Gordo\Examples\Encryption\Factories\AttachmentFactory());
+$entityDecorator->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
 $messageProxy = $entityDecorator->decorate($message);
 
-foreach ($messageProxy->getAttachments() as $attachment) {
-    echo $attachment->getRand().PHP_EOL;
-}
+$messageProxy->setMessage('kevin');
+var_dump($messageProxy->getEncryptedMessage());

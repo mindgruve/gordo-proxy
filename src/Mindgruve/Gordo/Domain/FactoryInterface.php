@@ -12,9 +12,9 @@ interface FactoryInterface
     public function supports($domainModelClass);
 
     /**
-     * @param $domainModelClass
+     * @param $proxyModelClass
      * @return object
      */
-    public function build($domainModelClass);
+    public function build($proxyModelClass);
 
 }
