@@ -3,7 +3,6 @@
 namespace Mindgruve\Gordo\Examples\Encryption;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Mindgruve\Gordo\Domain\DomainMapping;
 
 /**
  * @Entity

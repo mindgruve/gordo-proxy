@@ -2,8 +2,6 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption;
 
-use Mindgruve\Gordo\Domain\DomainMapping;
-
 /**
  * @Entity
  * @DomainMapping(domainModel="Mindgruve\Gordo\Examples\Encryption\AttachmentModel")

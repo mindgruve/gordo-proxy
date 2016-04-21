@@ -20,7 +20,7 @@ class DomainModelFactory
     protected $em;
 
     /**
-     * @var MetaDataReader
+     * @var AnnotationReader
      */
     protected $metaDataReader;
 
@@ -46,11 +46,11 @@ class DomainModelFactory
         $class,
         EntityManagerInterface $em,
         ProxyFactory $proxyFactory = null,
-        MetaDataReader $metaDataReader = null
+        AnnotationReader $metaDataReader = null
     ) {
         $this->em = $em;
         if (!$metaDataReader) {
-            $metaDataReader = new MetaDataReader($em);
+            $metaDataReader = new AnnotationReader($em);
         }
 
         $this->class = $class;

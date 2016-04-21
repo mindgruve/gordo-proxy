@@ -13,7 +13,7 @@ use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
 
-class MetaDataReader
+class AnnotationReader
 {
 
     /**

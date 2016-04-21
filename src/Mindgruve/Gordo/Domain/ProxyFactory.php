@@ -14,7 +14,7 @@ class ProxyFactory
     protected $em;
 
     /**
-     * @var MetaDataReader
+     * @var AnnotationReader
      */
     protected $metaDataReader;
 
@@ -31,12 +31,12 @@ class ProxyFactory
     /**
      * Constructor
      */
-    public function __construct(EntityManagerInterface $em, MetaDataReader $metaDataReader = null)
+    public function __construct(EntityManagerInterface $em, AnnotationReader $metaDataReader = null)
     {
         $this->em = $em;
 
         if(!$metaDataReader){
-            $metaDataReader = new MetaDataReader($em);
+            $metaDataReader = new AnnotationReader($em);
         }
 
         $this->metaDataReader = $metaDataReader;
