@@ -5,6 +5,8 @@ namespace Mindgruve\Gordo\Domain;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use GeneratedHydrator\Configuration;
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\LazyLoadingInterface;
 
 class EntityDecorator
 {
@@ -40,12 +42,16 @@ class EntityDecorator
     protected $loaders = array();
 
     /**
+     * @var array
+     */
+    protected $domainFactories = array();
+
+    /**
      * @param $class
      */
     public function __construct(
         $class,
         EntityManagerInterface $em,
-        ProxyFactory $proxyFactory = null,
         AnnotationReader $annotationReader = null
     ) {
         $this->em = $em;
@@ -53,13 +59,8 @@ class EntityDecorator
             $annotationReader = new AnnotationReader($em);
         }
 
-        if(!$proxyFactory){
-            $proxyFactory = new ProxyFactory($em, $annotationReader);
-        }
-
         $this->class = $class;
         $this->annotationReader = $annotationReader;
-        $this->proxyFactory = $proxyFactory;
 
         $config = new Configuration($class);
         $hydratorClass = $config->createFactory()->getHydratorClass();
@@ -84,9 +85,7 @@ class EntityDecorator
                     $collection = $data[$key];
                     $items = array();
                     foreach ($collection as $item) {
-                        if ($this->proxyFactory) {
-                            $item = $this->proxyFactory->createProxy($item);
-                        }
+                        $item = $this->createLazyLoadingProxy($item);
                         $items[] = $item;
                     }
                     $data[$key] = new ArrayCollection($items);
@@ -107,6 +106,7 @@ class EntityDecorator
     public function registerLoader(LoaderInterface $loader)
     {
         $this->loaders[] = $loader;
+
         return $this;
     }
 
@@ -128,6 +128,39 @@ class EntityDecorator
 
         return new $domainModelClass();
 
+    }
+
+    /**
+     * @param $obj
+     * @return \ProxyManager\Proxy\VirtualProxyInterface
+     */
+    protected function createLazyLoadingProxy($obj)
+    {
+        $class = get_class($obj);
+        $factory = new LazyLoadingValueHolderFactory();
+        $domainFactories = &$this->domainFactories;
+        $initializer = function (
+            & $wrappedObject,
+            LazyLoadingInterface $proxy,
+            $method,
+            array $parameters,
+            & $initializer
+        ) use ($obj, $class, & $domainFactories) {
+            $initializer = null;
+
+            if (isset($domainFactories[$class])) {
+                $domainFactory = $domainFactories[$class];
+            } else {
+                $domainFactory = new EntityDecorator($class, $this->em, $this->annotationReader);
+                $domainFactories[$class] = $domainFactory;
+            }
+
+            $wrappedObject = $domainFactory->decorate($obj);
+
+            return true;
+        };
+
+        return $factory->createProxy($this->annotationReader->getProxyModelClass($class), $initializer);
     }
 
 }
