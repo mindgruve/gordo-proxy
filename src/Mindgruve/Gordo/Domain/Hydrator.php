@@ -3,8 +3,6 @@
 namespace Mindgruve\Gordo\Domain;
 
 use GeneratedHydrator\Configuration;
-use Mindgruve\Gordo\Domain\Factory\ModelFactory;
-use Mindgruve\Gordo\Domain\Factory\ProxyFactory;
 
 class Hydrator
 {
@@ -24,7 +22,7 @@ class Hydrator
     protected $metaDataReader;
 
     /**
-     * @var ModelFactory
+     * @var DomainModelFactory
      */
     protected $factory;
 
