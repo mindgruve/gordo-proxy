@@ -12,6 +12,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
 class AnnotationReader
 {
@@ -27,7 +28,9 @@ class AnnotationReader
     protected $reader;
 
     /**
+     * @param EntityManagerInterface $em
      * @param ReaderInterface $reader
+     * @param array $namespaces
      * @param CacheProvider $cacheProvider
      */
     public function __construct(
@@ -40,7 +43,7 @@ class AnnotationReader
         $this->em = $em;
 
         if(!$reader){
-            $reader = new \Doctrine\Common\Annotations\SimpleAnnotationReader();
+            $reader = new SimpleAnnotationReader();
         }
 
         foreach ($namespaces as $namespace) {

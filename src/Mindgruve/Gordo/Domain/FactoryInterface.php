@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Domain;
 
-interface LoaderInterface
+interface FactoryInterface
 {
 
     /**
@@ -15,6 +15,6 @@ interface LoaderInterface
      * @param $domainModelClass
      * @return object
      */
-    public function buildDomainModel($domainModelClass);
+    public function build($domainModelClass);
 
 }

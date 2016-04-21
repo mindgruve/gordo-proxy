@@ -2,9 +2,10 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption\Factories;
 
-use Mindgruve\Gordo\Domain\LoaderInterface;
+use Mindgruve\Gordo\Domain\FactoryInterface;
+use Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy;
 
-class AttachmentFactory implements LoaderInterface
+class AttachmentFactory implements FactoryInterface
 {
     /**
      * @param $domainModelClass
@@ -20,14 +21,14 @@ class AttachmentFactory implements LoaderInterface
     }
 
     /**
-     * @param $domainModelClass
+     * @param $modelProxyClass
      * @return object
      */
-    public function buildDomainModel($domainModelClass)
+    public function build($modelProxyClass)
     {
         $encryptionKey = uniqid();
 
-        return new AttachmentModel($encryptionKey);
+        return new AttachmentProxy($encryptionKey);
     }
 
 

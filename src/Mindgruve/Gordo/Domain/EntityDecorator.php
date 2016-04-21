@@ -34,7 +34,7 @@ class EntityDecorator
     /**
      * @var array
      */
-    protected $loaders = array();
+    protected $factories = array();
 
     /**
      * @var array
@@ -43,6 +43,8 @@ class EntityDecorator
 
     /**
      * @param $class
+     * @param EntityManagerInterface $em
+     * @param AnnotationReader $annotationReader
      */
     public function __construct(
         $class,
@@ -64,7 +66,7 @@ class EntityDecorator
 
     /**
      * @param $objSrc
-     * @return object
+     * @return mixed
      */
     public function decorate($objSrc)
     {
@@ -95,12 +97,12 @@ class EntityDecorator
     }
 
     /**
-     * @param LoaderInterface $loader
+     * @param FactoryInterface $loader
      * @return $this
      */
-    public function registerLoader(LoaderInterface $loader)
+    public function registerLoader(FactoryInterface $loader)
     {
-        $this->loaders[] = $loader;
+        $this->factories[] = $loader;
 
         return $this;
     }
@@ -111,13 +113,13 @@ class EntityDecorator
      */
     protected function instantiate($entityProxyClass)
     {
-        foreach ($this->loaders as $loader) {
+        foreach ($this->factories as $factory) {
 
             /**
-             * @var LoaderInterface $loader
+             * @var FactoryInterface $factory
              */
-            if ($loader->supports($entityProxyClass)) {
-                return $loader->buildDomainModel($entityProxyClass);
+            if ($factory->supports($entityProxyClass)) {
+                return $factory->build($entityProxyClass);
             }
         }
 

@@ -19,21 +19,15 @@ class Hydrator
     /**
      * @var AnnotationReader
      */
-    protected $metaDataReader;
-
-    /**
-     * @var ProxyFactory
-     */
-    protected $factory;
+    protected $annotationReader;
 
     /**
      * @param $class
      */
-    public function __construct($class, AnnotationReader $metaDataReader, ProxyFactory $factory)
+    public function __construct($class, AnnotationReader $annotationReader)
     {
         $this->class = $class;
-        $this->metaDataReader = $metaDataReader;
-        $this->factory = $factory;
+        $this->annotationReader = $annotationReader;
 
         $config = new Configuration($class);
         $hydratorClass = $config->createFactory()->getHydratorClass();
