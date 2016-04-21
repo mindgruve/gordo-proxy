@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Examples\Encryption\Entities;
 
 /**
  * @Entity
- * @ProxyMapping(proxy="Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy")
+ * @TransformMapping(target="Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy")
  */
 class Attachment
 {

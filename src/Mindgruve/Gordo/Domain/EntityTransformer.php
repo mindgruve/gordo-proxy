@@ -4,7 +4,6 @@ namespace Mindgruve\Gordo\Domain;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use GeneratedHydrator\Configuration;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
 
@@ -60,7 +59,7 @@ class EntityTransformer
         $this->class = $class;
         $this->annotationReader = $annotationReader;
 
-        if(!$hydrator){
+        if (!$hydrator) {
             $hydrator = new Hydrator($class, $annotationReader);
         }
         $this->hydrator = $hydrator;
@@ -73,7 +72,7 @@ class EntityTransformer
     public function transform($objSrc)
     {
         $objSrcData = $this->hydrator->extract($objSrc);
-        $entityProxyClass = $this->annotationReader->getModelProxyClass(get_class($objSrc));
+        $entityProxyClass = $this->annotationReader->getEntityTransformTargetClass(get_class($objSrc));
         if ($entityProxyClass != $this->class) {
 
             $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
@@ -109,23 +108,28 @@ class EntityTransformer
                 $reflectionProperty->setValue($objDest, $this->hydrator);
                 $reflectionProperty->setAccessible(false);
 
+                $reflectionProperty = $reflectionClass->getProperty('syncedProperties');
+                $reflectionProperty->setAccessible(true);
+                $reflectionProperty->setValue($objDest, array_keys($objSrcData));
+                $reflectionProperty->setAccessible(false);
+
                 $proxiedMethods = array();
-                foreach(array_keys($objSrcData) as $property){
-                    $proxiedMethods[] = Inflector::camelize('set_'.$property);
+                foreach (array_keys($objSrcData) as $property) {
+                    $proxiedMethods[] = Inflector::camelize('set_' . $property);
                 }
-                foreach($associations as $associationKey => $association){
+                foreach ($associations as $associationKey => $association) {
                     $associationKey = Inflector::singularize($associationKey);
-                    $proxiedMethods[] = Inflector::camelize('add_'.$associationKey);
-                    $proxiedMethods[] = Inflector::camelize('remove_'.$associationKey);
+                    $proxiedMethods[] = Inflector::camelize('add_' . $associationKey);
+                    $proxiedMethods[] = Inflector::camelize('remove_' . $associationKey);
                 }
 
                 $factory = new Factory();
                 $proxy = $factory->createProxy($objDest, array());
-                foreach($proxiedMethods as $proxiedMethod){
+                foreach ($proxiedMethods as $proxiedMethod) {
                     $proxy->setMethodSuffixInterceptor(
                         $proxiedMethod,
-                        function ($proxy, $instance, $method, $params) {
-                            $instance->syncEntity();
+                        function ($proxy, $instance) {
+                            $instance->syncDataToEntity();
                         }
                     );
                 }

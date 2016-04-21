@@ -59,13 +59,13 @@ class AnnotationReader
 
     /**
      * @param $class
-     * @return null | ProxyMapping
+     * @return null | TransformMapping
      */
-    public function getDomainAnnotations($class)
+    public function getTransformAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof ProxyMapping) {
+            if ($annotation instanceof TransformMapping) {
                 return $annotation;
             }
         }
@@ -77,11 +77,11 @@ class AnnotationReader
      * @param $class
      * @return null|string
      */
-    public function getModelProxyClass($class)
+    public function getEntityTransformTargetClass($class)
     {
-        $annotations = $this->getDomainAnnotations($class);
+        $annotations = $this->getTransformAnnotations($class);
         if ($annotations) {
-            return $annotations->proxy;
+            return $annotations->target;
         }
 
         return null;
