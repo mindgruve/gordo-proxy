@@ -116,7 +116,7 @@ class DomainModelFactory
      * @param DependencyFactoryInterface $loader
      * @return $this
      */
-    public function registerDependencyLoader(DependencyFactoryInterface $loader)
+    public function registerLoader(DependencyFactoryInterface $loader)
     {
         $this->loaders[] = $loader;
         return $this;

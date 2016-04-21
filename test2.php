@@ -30,7 +30,7 @@ $message->setAttachments(new ArrayCollection(array($attachment)));
 
 $proxyFactory = new ProxyFactory($entityManager);
 $domainFactory = new DomainModelFactory('Mindgruve\Gordo\Examples\Encryption\Message', $entityManager, $proxyFactory);
-$domainFactory->registerDependencyLoader(new \Mindgruve\Gordo\Examples\Encryption\AttachmentFactory());
+$domainFactory->registerLoader(new \Mindgruve\Gordo\Examples\Encryption\AttachmentFactory());
 $messageModel = $domainFactory->buildDomainModel($message);
 
 $attachments = $messageModel->getAttachments();
