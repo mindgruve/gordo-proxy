@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
 
-class EntityTransformer
+class ProxyTransformer
 {
 
     /**
@@ -186,7 +186,7 @@ class EntityTransformer
      */
     protected function isEntityProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Domain\EntityProxyTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Domain\EntityDataSyncTrait', class_uses($obj))) {
             return true;
         }
 

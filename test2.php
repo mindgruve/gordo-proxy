@@ -5,7 +5,7 @@ $loader = include_once(__DIR__ . '/vendor/autoload.php');
 
 use Mindgruve\Gordo\Examples\Encryption\Entities\Message;
 use Mindgruve\Gordo\Examples\Encryption\Entities\Attachment;
-use Mindgruve\Gordo\Domain\EntityTransformer;
+use Mindgruve\Gordo\Domain\ProxyTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Doctrine\ORM\EntityManager;
@@ -27,7 +27,7 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$entityTransformer = new EntityTransformer('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
+$entityTransformer = new ProxyTransformer('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
 $entityTransformer->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
 $messageProxy = $entityTransformer->transform($message);
 

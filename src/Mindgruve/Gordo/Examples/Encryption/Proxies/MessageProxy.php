@@ -4,12 +4,12 @@ namespace Mindgruve\Gordo\Examples\Encryption\Proxies;
 
 use Mindgruve\Gordo\Examples\Encryption\EncryptionService;
 use Mindgruve\Gordo\Examples\Encryption\Entities\Message;
-use Mindgruve\Gordo\Domain\EntityProxyTrait;
+use Mindgruve\Gordo\Domain\EntityDataSyncTrait;
 
 class MessageProxy extends Message
 {
 
-    use EntityProxyTrait;
+    use EntityDataSyncTrait;
 
     /**
      * @var EncryptionService
