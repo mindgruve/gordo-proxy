@@ -1,125 +1,181 @@
-# Gordo
-
-Gordo is a small library designed to help you build rich domain models.  
-It was designed to solve a single question:
-
-        How do we include business logic in domain models when using Doctrine?
+# Gordo-Proxy
+        No more anemic data models  :) 
+        Gordo is a small library designed to help you build deliciously rich domains.  
 
 ## Architecture
-Gordo splits the responsibilities of buisness logic and database mapping into three classes:
-- First doctrine entity which contains your entity data. (a.k.a data transfer object)
-- A second object which acts as a proxy to your entity, and includes all your business logic. (a.k.a domain model)
-- A factory class (optional) that allows you to configure and inject dependencies to your entity proxy
+Gordo splits the responsibilities of buisness logic and database mapping:
+- First doctrine entity which contains your entity data. (the data transfer object).
+- A second object which acts as a proxy to your entity, and includes all your business logic. (the business domain model).
+- A factory class (optional) that allows you to configure and inject dependencies to your proxy object.
+- Gordo will also read your Doctrine annotations so that they are also transformed into proxy objects.  
+- Gordo can also be configured to register listeners for the setters/getters on you proxy object and syncs the data back to your entity.     
 
-Gordo will also read your Doctrine annotations transform all of your entity associations to their proxied versions.  Gordo can also be configured to register listeners for the setters/getters on you proxy object and syncs the data back to your entity.  
+To Summarize:
 
-This allows you to interact with your proxy object __as if__ it were the original entity.  And when you call $entityManager->flush() the updates can be saved back to your persistence storage.
+        With Gordo, create your Proxy object and interact with it as if it were the original entity.
 
-        No more anemic data models  :)  Gordo allows you to build rich data domains.
+## Quick Start - Creating a proxy
+Say we have a User entity, and we want to inject a dependency.
 
-## Sample Usage: Email Message Encryption
-For your client you need to build an email service but the message **and** the message needs to be encrypted.    
-To see how Gordo is different, lets see how we build this email service using doctrine.  
+1. Your entity might look like....
 
-First we build the message entity (setters/getters hidden to save space):   
-
-    <?php
-    /**
-     * @Entity
-     */
-    class Message
-    {
-
-        /**
-         * @Id @Column(type="integer")
-         * @GeneratedValue
-         */
-        private $id;
-
-        /** @Column(length=140, name="message") */
-        protected $encryptedMessage;
+        namespace Gordo\Example;
         
-        protected $plainTextMessage;
-
-        /** @Column(length=140, name="email") */
-        protected $email;
-
         /**
-         * @ManyToOne(targetEntity="Attachment")
-         * @JoinColumn(name="attachment_id", referencedColumnName="id")
-         */
-        protected $attachments;
-    }
-
-And the attachment entity:
-
-    /**
-    * @Entity
-    */
-    class Attachment
-    {
-
-        /**
-         * @Id @Column(type="integer")
-         * @ORM\GeneratedValue
-         */
-        private $id;
-
-        /** @Column(length=140, name="filename") */
-        protected $filename;
-    }
-
-Then we register an event listener to doctrine so that we encrypt the message before persisting to database (EncryptionService is some object that encapsulates your encryption code)
-
-    <?php
-    use Doctrine\ORM\Events;
-    use Doctrine\Common\EventSubscriber;
-    use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-
-    class EncyptionListener implements EventSubscriber
-    {
-        protected $encryptionService;
-    
-        public function __construct(EncryptionSevice $encryptionService){
-            $this->encryptionService
-        }
-    
-        public function getSubscribedEvents()
+        * @Entity
+        */
+        class User 
         {
-            return array(
-                Events::postUpdate,
-            );
+            /**
+             * @Id @Column(type="integer")
+             * @GeneratedValue
+             */
+            private $id;
+    
+            /** @Column(length=140) */
+            protected $username;       
+            
+             /** @Column(length=140) */
+            protected $passwordHash;    
         }
+        
+2. And a simple password md5 hash checker.  In real life, this might be much more complicated :)    
 
-        public function postUpdate(LifecycleEventArgs $args)
+        Namespace Gordo\Example;
+        
+        class passwordChecker
         {
-            $entity = $args->getObject();
-            $entityManager = $args->getObjectManager();
-
-            // perhaps you only want to act on some "Product" entity
-            if ($entity instanceof Message) {
-                if($entity->getPlainTextMessage()){
-                    $msg = $entity->getPlainTextMessage();  
-                    $entity->setEncryptedMessage($this->encryptionService->encrypt($msg));
-                    $entity->setPlainTextMessage(null);
-                }
+            public function isValid($password, $hash){
+                return md5($password) == $hash;
+            }
+        
+            public function hash($password){
+                return md5($password);
             }
         }
 
-Later you register this event listener...
+        
+2. Create a proxy class .  Be sure to extend your entity.
 
-    $entityManager->getEventManager()->addEventListener(array(Events::preUpdate), new EncyptionListener());   
+        namespace Gordo\Example;
+        
+        class UserProxy extends User 
+        {
+            protected $passwordService;
+            
+            public function __construct($passwordService){
+                $this->passwordService = $passwordService;
+            }
+            
+            public function updatePassword($password){
+                $this->passwordHash = $this->passwordService->hash($password);
+            }
+            
+            public function isValidPassword($password){
+                return $this->passwordHash->isValid($password);
+            }
+        }
 
-## If it ain't broke, why fix it?
-Using an event listener isn't a bad way of doing it all things considered.  Seriously!  
+3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  
+If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
 
-So whats the problem?  
+        namespace Gordo\Example;
+        
+        use Mindgruve\Gordo\Domain\EntityDataSyncTrait;;
+        
+        class UserProxy extends User 
+        {
+             use EntityDataSyncTrait;
+        }
 
-Hidden dependencies....
+4. Add an **@ProxyTransform** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
 
-See, there is no **explicit** contract in the code that ties the Message object to the EncryptionService.  It is a hidden dependency based on an event listener.  In order for the Message to be correctly saved to the database, it needs its plain text values to be encrypted before it gets saved to disk.
+        /**
+        * @Entity
+        * @ProxyTransform(target="Gordo\Example\UserProxy")
+        */
+        class User {
+        }
 
-Using Gordo, your dependencies become much more explicit
+5. Create a factory class for the UserProxy which contains the logic to build a UserProxy class (and inject your dependencies).  
+The factory interface has to methods - supports() which should return true if your Factory supports a given class, and build() which is called each time you create a Proxy.
 
-## Email Mesasge Encryption Example - Using Gordo
+        namespace Gordo\Example;
+        
+        use Mindgruve\Gordo\Domain\FactoryInterface;
+        
+        class UserProxyFactory implements FactoryInterface{
+            protected $container;
+            public function __construct($container){
+                $this->container = $container;
+            }
+            
+            public function supports($proxyClass){
+                if ($proxyClass == 'Gordo\Example\UserProxy') {
+                    return true;
+                }
+
+                return false;
+            }
+        }
+        
+        /**
+         * @param $proxyClass
+         * @return object
+         */
+        public function build($proxyClass)
+        {
+            $passwordService = $this->container->get('password_service');
+    
+            return new UserProxy($passwordService);
+        }    
+        
+6. Instantiate a Proxy Transformer for your class and register your Factory
+
+        use use Mindgruve\Gordo\Domain\ProxyTransformer;
+        use use Gordo\Example\UserProxyFactory;
+        
+        $userProxyTransformer = new ProxyTransformer('Gordo\Example\User', $entityManager);
+        $userProxyTransformer->registerFactory(new UserProxyFactory());
+
+7. Transform your Doctrine entity.
+
+        $userRepository = $entityManager->getRepository('Mindgruve\Example\User');
+        $users = $userRepository->findAll();
+        $user = $users[0];
+        $userProxy = $userProxyTransformer->transform($user);
+
+## Data Syncing between Proxy and Entity
+When you add the EntityDataSyncTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  By default, data is synced automatically from the Proxy --> Entity.
+
+There are a couple of annotations that you can put on your entity to configure this data syncing.
+
+|  Property | Description  | Default  |
+|---|---|---|
+| syncAuto  | Boolean that controls if automatic syncing enabled  | True (enabled)  |
+| syncProperties  | Array of properties to sync  | All properties are synced  |
+| syncListeners  | Methods that initiate a sync to entity  | All setters/getters  |
+
+**Example:** Sync all properties, but only when username is updated
+
+    /**
+     * @Entity
+     * @ProxyTransform(target="Gordo\Example\UserProxy",syncListeners={"setUsername"},syncAuto=true)
+     */
+
+**Example:** Sync only the password
+
+    /**
+     * @Entity
+     * @ProxyTransform(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},syncAuto=true)
+     */
+
+You can also manually update the entity either by calling the method syncToEntity() or syncFromEntity() or by accessing the protected property $entity inside your Proxy.
+
+
+
+
+
+
+
 
