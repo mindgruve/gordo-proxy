@@ -65,13 +65,13 @@ class AnnotationReader
      * Annotations specifically related to Entity Transformation as defined in the TransformMapping class
      *
      * @param $class
-     * @return null | TransformMapping
+     * @return null | ProxyTransform
      */
     public function getTransformAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof TransformMapping) {
+            if ($annotation instanceof ProxyTransform) {
                 return $annotation;
             }
         }
