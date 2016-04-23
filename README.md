@@ -76,8 +76,7 @@ Say we have a User entity, and we want to inject a dependency.
             }
         }
 
-3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  
-If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
+3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
 
         namespace Gordo\Example;
         
@@ -97,8 +96,7 @@ If you omit this trait then the data will be copied when the Proxy is created bu
         class User {
         }
 
-5. Create a factory class for the UserProxy which contains the logic to build a UserProxy class (and inject your dependencies).  
-The factory interface has to methods - supports() which should return true if your Factory supports a given class, and build() which is called each time you create a Proxy.
+5. Create a factory class for the UserProxy which contains the logic to build a UserProxy class (and inject your dependencies).  The factory interface has to methods - supports() which should return true if your Factory supports a given class, and build() which is called each time you create a Proxy.
 
         namespace Gordo\Example;
         
