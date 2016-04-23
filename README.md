@@ -61,14 +61,14 @@ Say we have a User entity, and we want to inject a dependency.
         
         class UserProxy extends User 
         {
-            protected $passwordService;
+            protected $passwordChecker;
             
             public function __construct($passwordService){
-                $this->passwordService = $passwordService;
+                $this->passwordChecker = $passwordChecker;
             }
             
             public function updatePassword($password){
-                $this->passwordHash = $this->passwordService->hash($password);
+                $this->passwordHash = $this->passwordChecker->hash($password);
             }
             
             public function isValidPassword($password){
@@ -76,7 +76,9 @@ Say we have a User entity, and we want to inject a dependency.
             }
         }
 
-3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
+3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  
+
+If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
 
         namespace Gordo\Example;
         
