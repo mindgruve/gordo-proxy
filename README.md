@@ -63,7 +63,7 @@ Say we have a User entity, and we want to inject a dependency.
         {
             protected $passwordChecker;
             
-            public function __construct($passwordService){
+            public function __construct($passwordChecker){
                 $this->passwordChecker = $passwordChecker;
             }
             
@@ -76,9 +76,7 @@ Say we have a User entity, and we want to inject a dependency.
             }
         }
 
-3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class.  
-
-If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
+3. To propogate data changes from your proxy back to your original entity add  **EntityDataSyncTrait** to your Proxy class. 
 
         namespace Gordo\Example;
         
@@ -125,9 +123,9 @@ If you omit this trait then the data will be copied when the Proxy is created bu
          */
         public function build($proxyClass)
         {
-            $passwordService = $this->container->get('password_service');
+            $passwordChecker = $this->container->get('password_checker');
     
-            return new UserProxy($passwordService);
+            return new UserProxy($passwordChecker);
         }    
         
 6. Instantiate a Proxy Transformer for your class and register your Factory
