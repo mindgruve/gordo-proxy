@@ -6,7 +6,7 @@
 Gordo splits the responsibilities of buisness logic and database mapping:
 - First doctrine entity which contains your entity data. (the data transfer object).
 - A second object which acts as a proxy to your entity, and includes all your business logic. (the business domain model).
-- A factory class (optional) that allows you to configure and inject dependencies to your proxy object.
+- A factory class that allows you to configure and inject dependencies to your proxy object.
 - Gordo will also read your Doctrine annotations so that they are also transformed into proxy objects.  
 - Gordo can also be configured to register listeners for the setters/getters on you proxy object and syncs the data back to your entity.     
 
