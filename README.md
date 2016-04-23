@@ -7,8 +7,8 @@ Gordo splits the responsibilities of buisness logic and database mapping:
 - First doctrine entity which contains your entity data. (the data transfer object).
 - A second object which acts as a proxy to your entity, and includes all your business logic. (the business domain model).
 - A factory class that allows you to configure and inject dependencies to your proxy object.
-- Gordo will also read your Doctrine annotations so that they are also transformed into proxy objects.  
-- Gordo can also be configured to register listeners for the setters/getters on you proxy object and syncs the data back to your entity.     
+- When you have object associations (one-to-one, many-to-one) these will also be transformed into proxy objects.  
+- Event listeners are registeres for the setters/getters on you proxy object and syncs the data back to your entity.     
 
 To Summarize:
 
@@ -144,7 +144,9 @@ Say we have a User entity, and we want to inject a dependency.
         $userProxy = $userProxyTransformer->transform($user);
 
 ## Data Syncing between Proxy and Entity
-When you add the EntityDataSyncTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  By default, data is synced automatically from the Proxy --> Entity.
+When you add the EntityDataSyncTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  
+
+By default, data is synced automatically from the Proxy --> Entity.
 
 There are a couple of annotations that you can put on your entity to configure this data syncing.
 
@@ -167,6 +169,14 @@ There are a couple of annotations that you can put on your entity to configure t
      * @Entity
      * @ProxyTransform(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},syncAuto=true)
      */
+
+**Example:** Turning off automatic syncing
+
+    /**
+     * @Entity
+     * @ProxyTransform(target="Gordo\Example\UserProxy",syncAuto=false)
+     */
+
 
 You can also manually update the entity either by calling the method syncToEntity() or syncFromEntity() or by accessing the protected property $entity inside your Proxy.
 
