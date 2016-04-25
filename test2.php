@@ -39,4 +39,3 @@ var_dump($message->getMessage());
 
 $testEntity1 = new \Mindgruve\Gordo\Tests\TestEntity1();
 $testProxy1 = $proxyManager->transform($testEntity1);
-var_dump($testProxy1);exit;

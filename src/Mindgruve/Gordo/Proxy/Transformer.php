@@ -89,74 +89,68 @@ class Transformer
             $objDest = $this->proxyManager->instantiate($entityProxyClass);
 
             if (!$objDest instanceof $objSrc) {
-                throw new \Exception('The proxy target class should extend the underlying entity');
+                throw new \Exception('The proxy target class should extend the underlying entity.  Proxy Class: '.$entityProxyClass);
+            }
+            if (!$this->isEntityProxy($objDest)) {
+                throw new \Exception('The proxy target class should use the EntityProxy trait.  Proxy Class: '.$entityProxyClass);
             }
 
             $this->hydrator->hydrate($objSrcData, $objDest);
+            $reflectionClass = new \ReflectionClass($objDest);
 
-            /**
-             * Check if EntityProxy
-             */
-            if ($this->isEntityProxy($objDest)) {
+            $reflectionProperty = $reflectionClass->getProperty('entity');
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($objDest, $objSrc);
+            $reflectionProperty->setAccessible(false);
 
-                $reflectionClass = new \ReflectionClass($objDest);
-
-                $reflectionProperty = $reflectionClass->getProperty('entity');
-                $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($objDest, $objSrc);
-                $reflectionProperty->setAccessible(false);
-
-                $reflectionProperty = $reflectionClass->getProperty('hydrator');
-                $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($objDest, $this->hydrator);
-                $reflectionProperty->setAccessible(false);
+            $reflectionProperty = $reflectionClass->getProperty('hydrator');
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($objDest, $this->hydrator);
+            $reflectionProperty->setAccessible(false);
 
 
-                $syncProperties = $this->annotationReader->getProxySyncedProperties($this->class);
-                if ($syncProperties == array('*')) {
-                    $syncProperties = array_keys($objSrcData);
+            $syncProperties = $this->annotationReader->getProxySyncedProperties($this->class);
+            if ($syncProperties == array('*')) {
+                $syncProperties = array_keys($objSrcData);
+            }
+
+            $reflectionProperty = $reflectionClass->getProperty('syncProperties');
+            $reflectionProperty->setAccessible(true);
+            $reflectionProperty->setValue($objDest, $syncProperties);
+            $reflectionProperty->setAccessible(false);
+
+            $factory = new Factory();
+            $proxy = $factory->createProxy($objDest, array());
+
+            $syncAuto = $this->annotationReader->getProxySyncAuto($this->class);
+            if ($syncAuto) {
+
+                $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
+                if ($syncedListeners == array('*')) {
+                    $syncedListeners = array();
+                    foreach (array_keys($objSrcData) as $property) {
+                        $syncedListeners[] = Inflector::camelize('set_' . $property);
+                    }
+                    foreach ($associations as $associationKey => $association) {
+                        $associationKey = Inflector::singularize($associationKey);
+                        $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
+                        $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
+                    }
                 }
 
-                $reflectionProperty = $reflectionClass->getProperty('syncProperties');
-                $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($objDest, $syncProperties);
-                $reflectionProperty->setAccessible(false);
-
-                $factory = new Factory();
-                $proxy = $factory->createProxy($objDest, array());
-
-                $syncAuto = $this->annotationReader->getProxySyncAuto($this->class);
-                if ($syncAuto) {
-
-                    $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
-                    if ($syncedListeners == array('*')) {
-                        $syncedListeners = array();
-                        foreach (array_keys($objSrcData) as $property) {
-                            $syncedListeners[] = Inflector::camelize('set_' . $property);
+                foreach ($syncedListeners as $syncListener) {
+                    $proxy->setMethodSuffixInterceptor(
+                        $syncListener,
+                        function ($proxy, $instance) {
+                            $instance->syncToEntity();
                         }
-                        foreach ($associations as $associationKey => $association) {
-                            $associationKey = Inflector::singularize($associationKey);
-                            $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
-                            $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
-                        }
-                    }
-
-                    foreach ($syncedListeners as $syncListener) {
-                        $proxy->setMethodSuffixInterceptor(
-                            $syncListener,
-                            function ($proxy, $instance) {
-                                $instance->syncToEntity();
-                            }
-                        );
-                    }
-
+                    );
                 }
-
-                return $proxy;
 
             }
 
-            return $objDest;
+            return $proxy;
+
         }
 
         return $objSrc;
@@ -170,7 +164,7 @@ class Transformer
      */
     protected function isEntityProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Traits\EntitySyncTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Traits\EntityProxyTrait', class_uses($obj))) {
             return true;
         }
 

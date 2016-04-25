@@ -3,10 +3,10 @@
 namespace Mindgruve\Gordo\Examples\Encryption\Proxies;
 
 use Mindgruve\Gordo\Examples\Encryption\Entities\Attachment;
-use Mindgruve\Gordo\Traits\EntitySyncTrait;
+use Mindgruve\Gordo\Traits\EntityProxyTrait;
 
 class AttachmentProxy extends Attachment
 {
-    use EntitySyncTrait;
+    use EntityProxyTrait;
 
 }

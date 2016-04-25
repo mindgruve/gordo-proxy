@@ -3,7 +3,7 @@
 namespace Mindgruve\Gordo\Traits;
 use Mindgruve\Gordo\Proxy\Hydrator;
 
-trait EntitySyncTrait
+trait EntityProxyTrait
 {
     protected $entity;
 

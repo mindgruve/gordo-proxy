@@ -76,17 +76,17 @@ Say we have a User entity, and we want to inject a dependency.
             }
         }
 
-3. To propogate data changes from your proxy back to your original entity add  **EntitySyncTrait** to your Proxy class.  
+3. To propogate data changes from your proxy back to your original entity add  **EntityProxyTrait** to your Proxy class.  
 
 If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
 
         namespace Gordo\Example;
         
-        use Mindgruve\Gordo\Traits\EntitySyncTrait;;
+        use Mindgruve\Gordo\Traits\EntityProxyTrait;;
         
         class UserProxy extends User 
         {
-             use EntitySyncTrait;
+             use EntityProxyTrait;
         }
 
 4. Add an **@EntityProxy** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
@@ -146,7 +146,7 @@ If you omit this trait then the data will be copied when the Proxy is created bu
         $userProxy = $userProxyTransformer->transform($user);
 
 ## Data Syncing between Proxy and Entity
-When you add the EntitySyncTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  
+When you add the EntityProxyTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  
 
 By default, data is synced automatically from the Proxy --> Entity.
 
