@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo\Tests\Proxy;
+namespace Mindgruve\Gordo\Tests\Entity;
 
 use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 
