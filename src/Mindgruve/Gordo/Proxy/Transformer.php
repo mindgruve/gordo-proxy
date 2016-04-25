@@ -91,6 +91,7 @@ class Transformer
             if (!$objDest instanceof $objSrc) {
                 throw new \Exception('The proxy target class should extend the underlying entity.  Proxy Class: '.$entityProxyClass);
             }
+
             if (!$this->isEntityProxy($objDest)) {
                 throw new \Exception('The proxy target class should use the EntityProxy trait.  Proxy Class: '.$entityProxyClass);
             }
@@ -170,6 +171,5 @@ class Transformer
 
         return false;
     }
-
 
 }

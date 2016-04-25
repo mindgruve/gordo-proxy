@@ -8,10 +8,19 @@ use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 class HydratorTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var Hydrator
+     */
     protected $hydrator;
 
+    /**
+     * @var TestEntity1
+     */
     protected $entity1;
 
+    /**
+     * Data Fixture SETUP
+     */
     public function setup()
     {
         $entity1 = new TestEntity1();
@@ -24,6 +33,9 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $this->hydrator = $hydrator;
     }
 
+    /**
+     * Test ability to extract properties as an array
+     */
     public function testExtract()
     {
         $this->assertEquals(
@@ -37,6 +49,9 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * Test ablity to hydrate object based off an array of values
+     */
     public function testHydrate()
     {
 
@@ -57,6 +72,9 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    /**
+     * Test ability to transfer properties from one object to another
+     */
     public function testTransfer()
     {
         $entity2 = new TestEntity1();
@@ -77,6 +95,9 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $entity2->getField3());
     }
 
+    /**
+     * Test ability to transfer data from one object to another... but only some properties
+     */
     public function testTransferOnlySomeProperties()
     {
         $entity2 = new TestEntity1();
