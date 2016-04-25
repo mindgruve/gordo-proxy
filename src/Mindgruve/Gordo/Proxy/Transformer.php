@@ -64,11 +64,13 @@ class Transformer
      *
      * @param $objSrc
      * @return mixed
+     * @throws \Exception
      */
     public function transform($objSrc)
     {
         $objSrcData = $this->hydrator->extract($objSrc);
         $entityProxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
+
         if ($entityProxyClass != $this->class) {
 
             $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
@@ -85,6 +87,11 @@ class Transformer
                 }
             }
             $objDest = $this->proxyManager->instantiate($entityProxyClass);
+
+            if(!$objDest instanceof $objSrc){
+                throw new \Exception('The proxy target class should extend the underlying entity');
+            }
+
             $this->hydrator->hydrate($objSrcData, $objDest);
 
             /**
@@ -121,7 +128,7 @@ class Transformer
                 $factory = new Factory();
                 $proxy = $factory->createProxy($objDest, array());
 
-                $syncAuto = $this->annotationReader->getEntitySyncAuto($this->class);
+                $syncAuto = $this->annotationReader->getProxySyncAuto($this->class);
                 if ($syncAuto) {
 
                     $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);

@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Tests;
 
-class TestProxy1
+class TestProxy1 extends TestEntity1
 {
 
 }

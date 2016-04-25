@@ -6,7 +6,7 @@ namespace Mindgruve\Gordo\Tests;
  * @Entity
  * @EntityProxy(target="Mindgruve\Gordo\Tests\TestProxy1")
  */
-class TestEntity1
+class TestEntity2
 {
 
     /**

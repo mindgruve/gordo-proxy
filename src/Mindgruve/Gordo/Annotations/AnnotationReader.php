@@ -91,6 +91,7 @@ class AnnotationReader
 
     /**
      * Default properties that will be copied over to entity when syncEntity is called
+     * An empty array is interpreted as all properties
      *
      * @param $class
      * @return array|null
@@ -110,7 +111,7 @@ class AnnotationReader
      * @param $class
      * @return bool
      */
-    public function getEntitySyncAuto($class){
+    public function getProxySyncAuto($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->syncAuto;
@@ -121,6 +122,7 @@ class AnnotationReader
 
     /**
      * Methods that will call the entitySync() method
+     * An empty array is interpreted as all methods
      *
      * @param $class
      * @return array|null

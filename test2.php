@@ -5,7 +5,6 @@ $loader = include_once(__DIR__ . '/vendor/autoload.php');
 
 use Mindgruve\Gordo\Examples\Encryption\Entities\Message;
 use Mindgruve\Gordo\Examples\Encryption\Entities\Attachment;
-use Mindgruve\Gordo\Proxy\Transformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Tools\Setup as DoctrineSetup;
 use Doctrine\ORM\EntityManager;
