@@ -63,7 +63,7 @@ Say we have a User entity, and we want to inject a dependency.
         {
             protected $passwordChecker;
             
-            public function __construct($passwordService){
+            public function __construct($passwordChecker){
                 $this->passwordChecker = $passwordChecker;
             }
             
@@ -125,9 +125,9 @@ If you omit this trait then the data will be copied when the Proxy is created bu
          */
         public function build($proxyClass)
         {
-            $passwordService = $this->container->get('password_service');
+            $passwordChecker = $this->container->get('password_checker');
     
-            return new UserProxy($passwordService);
+            return new UserProxy($passwordChecker);
         }    
         
 6. Instantiate a Proxy Transformer for your class and register your Factory
