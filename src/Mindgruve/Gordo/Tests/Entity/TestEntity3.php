@@ -4,9 +4,9 @@ namespace Mindgruve\Gordo\Tests\Entity;
 
 /**
  * @Entity
- * @EntityProxy(target="Mindgruve\Gordo\Tests\Proxy\TestProxy1",syncAuto=true,syncProperties={"*"},syncListeners={"*"})
+ * @EntityProxy(target="Mindgruve\Gordo\Tests\Proxy\TestProxy1",syncAuto=false,syncProperties={"field1"},syncListeners={"setField1"})
  */
-class TestEntity2
+class TestEntity3
 {
 
     /**
