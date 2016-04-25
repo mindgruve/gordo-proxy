@@ -32,14 +32,10 @@ class Transformer
     protected $hydrator;
 
     /**
-     * @var array
+     * @var ProxyManager
      */
-    protected $factories = array();
+    protected $proxyManager;
 
-    /**
-     * @var array
-     */
-    protected $entityDecorators = array();
 
     /**
      * Constructor
@@ -51,21 +47,15 @@ class Transformer
     public function __construct(
         $class,
         EntityManagerInterface $em,
-        AnnotationReader $annotationReader = null,
-        Hydrator $hydrator = null
+        AnnotationReader $annotationReader,
+        Hydrator $hydrator,
+        ProxyManager $proxyManager
     ) {
         $this->em = $em;
-        if (!$annotationReader) {
-            $annotationReader = new AnnotationReader($em);
-        }
-
         $this->class = $class;
         $this->annotationReader = $annotationReader;
-
-        if (!$hydrator) {
-            $hydrator = new Hydrator($class, $annotationReader);
-        }
         $this->hydrator = $hydrator;
+        $this->proxyManager = $proxyManager;
     }
 
     /**
@@ -94,7 +84,7 @@ class Transformer
                     $objSrcData[$key] = new ArrayCollection($items);
                 }
             }
-            $objDest = $this->instantiate($entityProxyClass);
+            $objDest = $this->proxyManager->instantiate($entityProxyClass);
             $this->hydrator->hydrate($objSrcData, $objDest);
 
             /**
@@ -114,8 +104,10 @@ class Transformer
                 $reflectionProperty->setValue($objDest, $this->hydrator);
                 $reflectionProperty->setAccessible(false);
 
-                $syncedPropertyAnnotations = $this->annotationReader->getEntityTransformationSyncedProperties($this->class);
-                if($syncedPropertyAnnotations){
+                $syncedPropertyAnnotations = $this->annotationReader->getEntityTransformationSyncedProperties(
+                    $this->class
+                );
+                if ($syncedPropertyAnnotations) {
                     $syncedProperties = $syncedPropertyAnnotations;
                 } else {
                     $syncedProperties = array_keys($objSrcData);
@@ -130,10 +122,10 @@ class Transformer
                 $proxy = $factory->createProxy($objDest, array());
 
                 $syncAuto = $this->annotationReader->getEntitySyncAuto($this->class);
-                if($syncAuto){
+                if ($syncAuto) {
 
                     $syncedListeners = $this->annotationReader->getEntitySyncListeners($this->class);
-                    if(!$syncedListeners){
+                    if (!$syncedListeners) {
                         $syncedListeners = array();
                         foreach (array_keys($objSrcData) as $property) {
                             $syncedListeners[] = Inflector::camelize('set_' . $property);
@@ -167,19 +159,6 @@ class Transformer
     }
 
     /**
-     * Register a factory for the target Object
-     *
-     * @param FactoryInterface $factory
-     * @return $this
-     */
-    public function registerFactory(FactoryInterface $factory)
-    {
-        $this->factories[] = $factory;
-
-        return $this;
-    }
-
-    /**
      * Checks if the target object has the EntityProxy trait
      *
      * @param $obj
@@ -194,25 +173,5 @@ class Transformer
         return false;
     }
 
-    /**
-     * Create a new target object, optionally using a factory method
-     *
-     * @param $entityProxyClass
-     * @return object
-     */
-    protected function instantiate($entityProxyClass)
-    {
-        foreach ($this->factories as $factory) {
 
-            /**
-             * @var FactoryInterface $factory
-             */
-            if ($factory->supports($entityProxyClass)) {
-                return $factory->build($entityProxyClass);
-            }
-        }
-
-        return new $entityProxyClass();
-
-    }
 }

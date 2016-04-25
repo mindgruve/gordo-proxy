@@ -27,9 +27,9 @@ $message->setMessage('woot');
 $attachment = new Attachment();
 $message->setAttachments(new ArrayCollection(array($attachment)));
 
-$proxyTranformer = new Transformer('Mindgruve\Gordo\Examples\Encryption\Entities\Message', $entityManager);
-$proxyTranformer->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
-$messageProxy = $proxyTranformer->transform($message);
+$proxyManager = new \Mindgruve\Gordo\Proxy\ProxyManager($entityManager);
+$proxyManager->registerFactory(new \Mindgruve\Gordo\Examples\Encryption\Factories\MessageFactory());
+$messageProxy = $proxyManager->transform($message);
 
 $messageProxy->setMessage('kevin');
 $messageProxy->setEmail('test@test.com');
@@ -39,6 +39,5 @@ var_dump($message->getMessage());
 
 
 $testEntity1 = new \Mindgruve\Gordo\Tests\TestEntity1();
-$proxyTranformer = new Transformer('Mindgruve\Gordo\Tests\TestEntity1', $entityManager);
-$testProxy1 = $proxyTranformer->transform($testEntity1);
+$testProxy1 = $proxyManager->transform($testEntity1);
 var_dump($testProxy1);exit;
