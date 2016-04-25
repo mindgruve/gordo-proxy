@@ -132,10 +132,10 @@ If you omit this trait then the data will be copied when the Proxy is created bu
         
 6. Instantiate a Proxy Transformer for your class and register your Factory
 
-        use use Mindgruve\Gordo\Domain\ProxyTransformer;
+        use use Mindgruve\Gordo\Domain\Transformer;
         use use Gordo\Example\UserProxyFactory;
         
-        $userProxyTransformer = new ProxyTransformer('Gordo\Example\User', $entityManager);
+        $userProxyTransformer = new Transformer('Gordo\Example\User', $entityManager);
         $userProxyTransformer->registerFactory(new UserProxyFactory());
 
 7. Transform your Doctrine entity.

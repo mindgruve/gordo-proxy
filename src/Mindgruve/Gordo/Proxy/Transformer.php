@@ -8,7 +8,7 @@ use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 
-class ProxyTransformer
+class Transformer
 {
 
     /**
