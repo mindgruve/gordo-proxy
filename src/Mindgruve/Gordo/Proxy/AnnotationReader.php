@@ -13,6 +13,7 @@ use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Mindgruve\Gordo\Annotations\EntityProxy;
 
 class AnnotationReader
 {
@@ -40,7 +41,7 @@ class AnnotationReader
     public function __construct(
         EntityManagerInterface $em,
         ReaderInterface $reader = null,
-        array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Proxy'),
+        array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Annotations'),
         CacheProvider $cacheProvider = null
     ) {
 
@@ -65,13 +66,13 @@ class AnnotationReader
      * Annotations specifically related to Entity Transformation as defined in the TransformMapping class
      *
      * @param $class
-     * @return null | ProxyTransform
+     * @return null | EntityProxy
      */
     public function getTransformAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof ProxyTransform) {
+            if ($annotation instanceof EntityProxy) {
                 return $annotation;
             }
         }

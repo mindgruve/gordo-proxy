@@ -89,11 +89,11 @@ If you omit this trait then the data will be copied when the Proxy is created bu
              use EntitySyncTrait;
         }
 
-4. Add an **@ProxyTransform** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
+4. Add an **@EntityProxy** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
 
         /**
         * @Entity
-        * @ProxyTransform(target="Gordo\Example\UserProxy")
+        * @EntityProxy(target="Gordo\Example\UserProxy")
         */
         class User {
         }
@@ -162,21 +162,21 @@ There are a couple of annotations that you can put on your entity to configure t
 
     /**
      * @Entity
-     * @ProxyTransform(target="Gordo\Example\UserProxy",syncListeners={"setUsername"},syncAuto=true)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncListeners={"setUsername"},syncAuto=true)
      */
 
 **Example:** Sync only the password
 
     /**
      * @Entity
-     * @ProxyTransform(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},syncAuto=true)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},syncAuto=true)
      */
 
 **Example:** Turning off automatic syncing
 
     /**
      * @Entity
-     * @ProxyTransform(target="Gordo\Example\UserProxy",syncAuto=false)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncAuto=false)
      */
 
 

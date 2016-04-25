@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Tests;
 
 /**
  * @Entity
- * @ProxyTransform(target="Mindgruve\Gordo\Tests\TestProxy1")
+ * @EntityProxy(target="Mindgruve\Gordo\Tests\TestProxy1")
  */
 class TestEntity1
 {

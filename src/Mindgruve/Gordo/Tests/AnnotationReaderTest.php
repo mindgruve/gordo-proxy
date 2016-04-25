@@ -3,7 +3,7 @@
 namespace Mindgruve\Gordo\Domain\Tests;
 
 use Mindgruve\Gordo\Proxy\AnnotationReader;
-use Mindgruve\Gordo\Proxy\ProxyTransform;
+use Mindgruve\Gordo\Annotations\EntityProxy;
 use Mockery;
 
 class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
@@ -38,7 +38,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $sut = new AnnotationReader($emMock);
         $annotations = $sut->getTransformAnnotations('Mindgruve\Gordo\Tests\TestEntity1');
 
-        $this->assertTrue($annotations instanceof ProxyTransform);
+        $this->assertTrue($annotations instanceof EntityProxy);
 
     }
 

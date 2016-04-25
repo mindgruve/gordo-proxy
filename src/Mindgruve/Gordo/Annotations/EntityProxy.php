@@ -1,12 +1,12 @@
 <?php
 
-namespace Mindgruve\Gordo\Proxy;
+namespace Mindgruve\Gordo\Annotations;
 
 /**
  * @Annotation
  * @Target("CLASS")
  */
-class ProxyTransform
+class EntityProxy
 {
 
     /**
