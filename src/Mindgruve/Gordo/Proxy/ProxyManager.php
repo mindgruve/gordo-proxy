@@ -63,7 +63,7 @@ class ProxyManager
 
         if (!$hydrator) {
             if (!isset($this->hydrators[$class])) {
-                $this->hydrators[$class] = new Hydrator($class, $this->annotationReader);
+                $this->hydrators[$class] = new Hydrator($class);
             }
             $hydrator =$this->hydrators[$class];
         }

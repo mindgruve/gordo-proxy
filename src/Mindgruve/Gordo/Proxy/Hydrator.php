@@ -3,7 +3,6 @@
 namespace Mindgruve\Gordo\Proxy;
 
 use GeneratedHydrator\Configuration;
-use Mindgruve\Gordo\Annotations\AnnotationReader;
 
 class Hydrator
 {
@@ -18,17 +17,11 @@ class Hydrator
     protected $hydrator;
 
     /**
-     * @var AnnotationReader
-     */
-    protected $annotationReader;
-
-    /**
      * @param $class
      */
-    public function __construct($class, AnnotationReader $annotationReader)
+    public function __construct($class)
     {
         $this->class = $class;
-        $this->annotationReader = $annotationReader;
 
         $config = new Configuration($class);
         $hydratorClass = $config->createFactory()->getHydratorClass();
