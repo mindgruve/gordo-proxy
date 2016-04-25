@@ -108,14 +108,14 @@ class Transformer
                     $this->class
                 );
                 if ($syncedPropertyAnnotations) {
-                    $syncedProperties = $syncedPropertyAnnotations;
+                    $syncProperties = $syncedPropertyAnnotations;
                 } else {
-                    $syncedProperties = array_keys($objSrcData);
+                    $syncProperties = array_keys($objSrcData);
                 }
 
-                $reflectionProperty = $reflectionClass->getProperty('syncedProperties');
+                $reflectionProperty = $reflectionClass->getProperty('syncProperties');
                 $reflectionProperty->setAccessible(true);
-                $reflectionProperty->setValue($objDest, $syncedProperties);
+                $reflectionProperty->setValue($objDest, $syncProperties);
                 $reflectionProperty->setAccessible(false);
 
                 $factory = new Factory();

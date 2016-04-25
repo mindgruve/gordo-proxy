@@ -104,22 +104,22 @@ class ProxyManager
     /**
      * Create a new target object, optionally using a factory method
      *
-     * @param $entityProxyClass
+     * @param $ProxyClass
      * @return object
      */
-    public function instantiate($entityProxyClass)
+    public function instantiate($ProxyClass)
     {
         foreach ($this->factories as $factory) {
 
             /**
              * @var FactoryInterface $factory
              */
-            if ($factory->supports($entityProxyClass)) {
-                return $factory->build($entityProxyClass);
+            if ($factory->supports($ProxyClass)) {
+                return $factory->build($ProxyClass);
             }
         }
 
-        return new $entityProxyClass();
+        return new $ProxyClass();
 
     }
 

@@ -6,15 +6,15 @@ interface FactoryInterface
 {
 
     /**
-     * @param $domainModelClass
+     * @param $ProxyClass
      * @return bool
      */
-    public function supports($domainModelClass);
+    public function supports($ProxyClass);
 
     /**
-     * @param $proxyModelClass
+     * @param $ProxyClass
      * @return object
      */
-    public function build($proxyModelClass);
+    public function build($ProxyClass);
 
 }

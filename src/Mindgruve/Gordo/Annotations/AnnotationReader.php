@@ -98,7 +98,7 @@ class AnnotationReader
     public function getProxySyncedProperties($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
-            return $annotations->syncedProperties;
+            return $annotations->syncProperties;
         }
 
         return null;

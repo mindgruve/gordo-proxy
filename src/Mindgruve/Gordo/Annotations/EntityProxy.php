@@ -22,7 +22,7 @@ class EntityProxy
     /**
      * @var array
      */
-    public $syncedProperties = array();
+    public $syncProperties = array();
 
     /**
      * @var array

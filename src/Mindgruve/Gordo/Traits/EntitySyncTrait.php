@@ -10,7 +10,7 @@ trait EntitySyncTrait
     /**
      * @var array
      */
-    protected $syncedProperties = array();
+    protected $syncProperties = array();
 
     /**
      * @var Hydrator
@@ -33,7 +33,7 @@ trait EntitySyncTrait
     public function syncToEntity(array $properties = null)
     {
         if (!$properties) {
-            $properties = $this->syncedProperties;
+            $properties = $this->syncProperties;
         }
         $this->hydrator->transfer($this, $this->entity, $properties);
     }
@@ -46,7 +46,7 @@ trait EntitySyncTrait
     public function syncFromEntity(array $properties = null)
     {
         if (!$properties) {
-            $properties = $this->syncedProperties;
+            $properties = $this->syncProperties;
         }
         $this->hydrator->transfer($this->entity, $this, $properties);
     }
