@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain;
+namespace Mindgruve\Gordo\Proxy;
 
 trait EntityDataSyncTrait
 {

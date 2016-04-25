@@ -6,7 +6,7 @@
  * Time: 1:44 PM
  */
 
-namespace Mindgruve\Gordo\Domain;
+namespace Mindgruve\Gordo\Proxy;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Annotations\Reader as ReaderInterface;
@@ -40,7 +40,7 @@ class AnnotationReader
     public function __construct(
         EntityManagerInterface $em,
         ReaderInterface $reader = null,
-        array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Domain'),
+        array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Proxy'),
         CacheProvider $cacheProvider = null
     ) {
 

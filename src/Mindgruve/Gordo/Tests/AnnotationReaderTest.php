@@ -2,8 +2,8 @@
 
 namespace Mindgruve\Gordo\Domain\Tests;
 
-use Mindgruve\Gordo\Domain\AnnotationReader;
-use Mindgruve\Gordo\Domain\ProxyTransform;
+use Mindgruve\Gordo\Proxy\AnnotationReader;
+use Mindgruve\Gordo\Proxy\ProxyTransform;
 use Mockery;
 
 class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
@@ -21,11 +21,11 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $doctrineReaderMock = Mockery::mock('Doctrine\Common\Annotations\Reader');
-        $nameSpaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Domain', 'Test\Namespace');
+        $nameSpaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Proxy', 'Test\Namespace');
         $cacheProvider = Mockery::mock('Doctrine\Common\Cache\CacheProvider');
 
         $doctrineReaderMock->shouldReceive('addNamespace')->with('Doctrine\ORM\Mapping');
-        $doctrineReaderMock->shouldReceive('addNamespace')->with('Mindgruve\Gordo\Domain');
+        $doctrineReaderMock->shouldReceive('addNamespace')->with('Mindgruve\Gordo\Proxy');
         $doctrineReaderMock->shouldReceive('addNamespace')->with('Test\Namespace');
 
         $sut = new AnnotationReader($emMock, $doctrineReaderMock, $nameSpaces, $cacheProvider);

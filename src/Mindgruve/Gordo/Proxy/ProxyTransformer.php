@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain;
+namespace Mindgruve\Gordo\Proxy;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -186,7 +186,7 @@ class ProxyTransformer
      */
     protected function isEntityProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Domain\EntityDataSyncTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Proxy\EntityDataSyncTrait', class_uses($obj))) {
             return true;
         }
 

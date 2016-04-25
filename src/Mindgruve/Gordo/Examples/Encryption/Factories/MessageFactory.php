@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Examples\Encryption\Factories;
 
-use Mindgruve\Gordo\Domain\FactoryInterface;
+use Mindgruve\Gordo\Proxy\FactoryInterface;
 use Mindgruve\Gordo\Examples\Encryption\EncryptionService;
 use Mindgruve\Gordo\Examples\Encryption\Proxies\MessageProxy;
 
