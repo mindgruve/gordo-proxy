@@ -1,10 +1,10 @@
 <?php
 
-namespace Mindgruve\Gordo\Tests;
+namespace Mindgruve\Gordo\Tests\Entity;
 
 /**
  * @Entity
- * @EntityProxy(target="Mindgruve\Gordo\Tests\TestProxy1",syncAuto=false,syncProperties={"field1"},syncListeners={"setField1"})
+ * @EntityProxy(target="Mindgruve\Gordo\Tests\Proxy\TestProxy1",syncAuto=false,syncProperties={"field1"},syncListeners={"setField1"})
  */
 class TestEntity2
 {
