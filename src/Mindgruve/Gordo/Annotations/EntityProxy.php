@@ -17,7 +17,7 @@ class EntityProxy
     /**
      * @var bool
      */
-    public $syncAuto = true;
+    public $syncAuto = false;
 
     /**
      * @var array

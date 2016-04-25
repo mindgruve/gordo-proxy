@@ -1,6 +1,6 @@
 <?php
 
-namespace Mindgruve\Gordo\Domain\Tests;
+namespace Mindgruve\Gordo\Tests\Annotations;
 
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Mindgruve\Gordo\Annotations\EntityProxy;
@@ -40,7 +40,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($proxyAnnoation instanceof EntityProxy);
         $this->assertEquals('Mindgruve\Gordo\Tests\TestProxy1', $proxyAnnoation->target);
-        $this->assertEquals(true, $proxyAnnoation->syncAuto);
+        $this->assertEquals(false, $proxyAnnoation->syncAuto);
         $this->assertEquals(array(), $proxyAnnoation->syncListeners);
         $this->assertEquals(array(), $proxyAnnoation->syncProperties);
     }
@@ -72,13 +72,13 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('field1'), $properties);
     }
 
-    public function testGetProxySyncAuto()
+    public function testGetProxySyncAutoDefault()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncAuto('Mindgruve\Gordo\Tests\TestEntity1');
-        $this->assertEquals(true, $properties);
+        $this->assertEquals(false, $properties);
     }
 
     public function testGetProxySyncAutoFalse()

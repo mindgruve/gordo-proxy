@@ -88,7 +88,7 @@ class Transformer
             }
             $objDest = $this->proxyManager->instantiate($entityProxyClass);
 
-            if(!$objDest instanceof $objSrc){
+            if (!$objDest instanceof $objSrc) {
                 throw new \Exception('The proxy target class should extend the underlying entity');
             }
 
@@ -111,12 +111,9 @@ class Transformer
                 $reflectionProperty->setValue($objDest, $this->hydrator);
                 $reflectionProperty->setAccessible(false);
 
-                $syncedPropertyAnnotations = $this->annotationReader->getProxySyncedProperties(
-                    $this->class
-                );
-                if ($syncedPropertyAnnotations) {
-                    $syncProperties = $syncedPropertyAnnotations;
-                } else {
+
+                $syncProperties = $this->annotationReader->getProxySyncedProperties($this->class);
+                if ($syncProperties == array('*')) {
                     $syncProperties = array_keys($objSrcData);
                 }
 
@@ -132,7 +129,7 @@ class Transformer
                 if ($syncAuto) {
 
                     $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
-                    if (!$syncedListeners) {
+                    if ($syncedListeners == array('*')) {
                         $syncedListeners = array();
                         foreach (array_keys($objSrcData) as $property) {
                             $syncedListeners[] = Inflector::camelize('set_' . $property);
