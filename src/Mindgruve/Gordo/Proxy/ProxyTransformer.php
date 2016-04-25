@@ -186,7 +186,7 @@ class ProxyTransformer
      */
     protected function isEntityProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Proxy\EntityDataSyncTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Proxy\EntitySyncTrait', class_uses($obj))) {
             return true;
         }
 

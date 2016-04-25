@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Proxy;
 
-trait EntityDataSyncTrait
+trait EntitySyncTrait
 {
     protected $entity;
 
