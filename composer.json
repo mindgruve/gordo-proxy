@@ -9,6 +9,7 @@
     }
   ],
   "require": {
+    "mockery/mockery": "~0.9",
     "ocramius/proxy-manager": "^1.0",
     "phpunit/phpunit": "4.8",
     "ocramius/generated-hydrator": "^1.1",
