@@ -89,11 +89,15 @@ class Transformer
             $objDest = $this->proxyManager->instantiate($entityProxyClass);
 
             if (!$objDest instanceof $objSrc) {
-                throw new \Exception('The proxy target class should extend the underlying entity.  Proxy Class: '.$entityProxyClass);
+                throw new \Exception(
+                    'The proxy target class should extend the underlying entity.  Proxy Class: ' . $entityProxyClass
+                );
             }
 
             if (!$this->isEntityProxy($objDest)) {
-                throw new \Exception('The proxy target class should use the EntityProxy trait.  Proxy Class: '.$entityProxyClass);
+                throw new \Exception(
+                    'The proxy target class should use the EntityProxy trait.  Proxy Class: ' . $entityProxyClass
+                );
             }
 
             $this->hydrator->hydrate($objSrcData, $objDest);
@@ -134,8 +138,10 @@ class Transformer
                     }
                     foreach ($associations as $associationKey => $association) {
                         $associationKey = Inflector::singularize($associationKey);
+                        $associationKeyPlural = Inflector::pluralize($associationKey);
                         $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
                         $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
+                        $syncedListeners[] = Inflector::camelize('set_' . $associationKeyPlural);
                     }
                 }
 
