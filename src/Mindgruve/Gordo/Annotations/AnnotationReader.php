@@ -1,19 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: ksimpson
- * Date: 4/20/16
- * Time: 1:44 PM
- */
 
-namespace Mindgruve\Gordo\Proxy;
+namespace Mindgruve\Gordo\Annotations;
 
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
-use Mindgruve\Gordo\Annotations\EntityProxy;
 
 class AnnotationReader
 {

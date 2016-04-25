@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
+use Mindgruve\Gordo\Annotations\AnnotationReader;
 
 class ProxyTransformer
 {
@@ -186,7 +187,7 @@ class ProxyTransformer
      */
     protected function isEntityProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Proxy\EntitySyncTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Traits\EntitySyncTrait', class_uses($obj))) {
             return true;
         }
 

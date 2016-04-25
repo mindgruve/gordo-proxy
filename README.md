@@ -82,7 +82,7 @@ If you omit this trait then the data will be copied when the Proxy is created bu
 
         namespace Gordo\Example;
         
-        use Mindgruve\Gordo\Domain\EntitySyncTrait;;
+        use Mindgruve\Gordo\Traits\EntitySyncTrait;;
         
         class UserProxy extends User 
         {

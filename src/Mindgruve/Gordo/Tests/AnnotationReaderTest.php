@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Domain\Tests;
 
-use Mindgruve\Gordo\Proxy\AnnotationReader;
+use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Mindgruve\Gordo\Annotations\EntityProxy;
 use Mockery;
 

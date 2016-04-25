@@ -3,6 +3,7 @@
 namespace Mindgruve\Gordo\Proxy;
 
 use GeneratedHydrator\Configuration;
+use Mindgruve\Gordo\Annotations\AnnotationReader;
 
 class Hydrator
 {

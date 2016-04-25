@@ -1,6 +1,7 @@
 <?php
 
-namespace Mindgruve\Gordo\Proxy;
+namespace Mindgruve\Gordo\Traits;
+use Mindgruve\Gordo\Proxy\Hydrator;
 
 trait EntitySyncTrait
 {
