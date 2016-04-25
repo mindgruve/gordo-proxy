@@ -68,7 +68,7 @@ class Transformer
     public function transform($objSrc)
     {
         $objSrcData = $this->hydrator->extract($objSrc);
-        $entityProxyClass = $this->annotationReader->getEntityTransformTargetClass(get_class($objSrc));
+        $entityProxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
         if ($entityProxyClass != $this->class) {
 
             $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
@@ -104,7 +104,7 @@ class Transformer
                 $reflectionProperty->setValue($objDest, $this->hydrator);
                 $reflectionProperty->setAccessible(false);
 
-                $syncedPropertyAnnotations = $this->annotationReader->getEntityTransformationSyncedProperties(
+                $syncedPropertyAnnotations = $this->annotationReader->getProxySyncedProperties(
                     $this->class
                 );
                 if ($syncedPropertyAnnotations) {
@@ -124,7 +124,7 @@ class Transformer
                 $syncAuto = $this->annotationReader->getEntitySyncAuto($this->class);
                 if ($syncAuto) {
 
-                    $syncedListeners = $this->annotationReader->getEntitySyncListeners($this->class);
+                    $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
                     if (!$syncedListeners) {
                         $syncedListeners = array();
                         foreach (array_keys($objSrcData) as $property) {

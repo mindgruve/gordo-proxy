@@ -36,10 +36,9 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
         $sut = new AnnotationReader($emMock);
-        $annotations = $sut->getTransformAnnotations('Mindgruve\Gordo\Tests\TestEntity1');
+        $annotations = $sut->getProxyAnnotations('Mindgruve\Gordo\Tests\TestEntity1');
 
         $this->assertTrue($annotations instanceof EntityProxy);
-
     }
 
 

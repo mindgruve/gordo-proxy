@@ -56,12 +56,12 @@ class AnnotationReader
     }
 
     /**
-     * Annotations specifically related to Entity Transformation as defined in the TransformMapping class
+     * Annotations specifically related to Entity Transformation as defined in the EntityProxy class
      *
      * @param $class
      * @return null | EntityProxy
      */
-    public function getTransformAnnotations($class)
+    public function getProxyAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
@@ -79,9 +79,9 @@ class AnnotationReader
      * @param $class
      * @return null|string
      */
-    public function getEntityTransformTargetClass($class)
+    public function getProxyTargetClass($class)
     {
-        $annotations = $this->getTransformAnnotations($class);
+        $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->target;
         }
@@ -95,8 +95,8 @@ class AnnotationReader
      * @param $class
      * @return array|null
      */
-    public function getEntityTransformationSyncedProperties($class){
-        $annotations = $this->getTransformAnnotations($class);
+    public function getProxySyncedProperties($class){
+        $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->syncedProperties;
         }
@@ -111,7 +111,7 @@ class AnnotationReader
      * @return bool
      */
     public function getEntitySyncAuto($class){
-        $annotations = $this->getTransformAnnotations($class);
+        $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->syncAuto;
         }
@@ -125,8 +125,8 @@ class AnnotationReader
      * @param $class
      * @return array|null
      */
-    public function getEntitySyncListeners($class){
-        $annotations = $this->getTransformAnnotations($class);
+    public function getProxySyncListeners($class){
+        $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->syncListeners;
         }
