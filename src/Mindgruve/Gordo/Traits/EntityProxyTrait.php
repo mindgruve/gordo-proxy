@@ -36,10 +36,10 @@ trait EntityProxyTrait
      * @param $syncDirection
      */
     public function syncEntity(
-        $properties = null,
+        $properties = ProxyConstants::SYNC_DEFAULT_PROPERTIES,
         $syncDirection = ProxyConstants::SYNC_FROM_PROXY
     ) {
-        if (!$properties) {
+        if ($properties == ProxyConstants::SYNC_DEFAULT_PROPERTIES) {
             $properties = $this->syncProperties;
         }
 

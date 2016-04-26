@@ -105,7 +105,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $proxy1->getField3());
     }
 
-    public function testTransformSynced1()
+    public function testTransformSyncedEntity1()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
@@ -114,47 +114,10 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
 
         $sut = new ProxyManager($emMock);
         $proxy1 = $sut->transform($this->entity1);
-        $proxy1->setField1('x');
 
-        $this->assertEquals('a', $this->entity1->getField1());
-        $this->assertEquals('b', $this->entity1->getField2());
-        $this->assertEquals('c', $this->entity1->getField3());
-        $this->assertEquals('x', $proxy1->getField1());
-        $this->assertEquals('b', $proxy1->getField2());
-        $this->assertEquals('c', $proxy1->getField3());
-    }
-
-    public function testTransformSynced2()
-    {
-        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
-        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
-        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
-
-        $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity2);
         $proxy1->setField1('x');
         $proxy1->setField2('y');
         $proxy1->setField3('z');
-
-        $this->assertEquals('x', $this->entity2->getField1());
-        $this->assertEquals('y', $this->entity2->getField2());
-        $this->assertEquals('z', $this->entity2->getField3());
-        $this->assertEquals('x', $proxy1->getField1());
-        $this->assertEquals('y', $proxy1->getField2());
-        $this->assertEquals('z', $proxy1->getField3());
-    }
-
-    public function testTransformNotSynced()
-    {
-        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
-        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
-        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
-
-        $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity1);
-        $proxy1->setField1('x');
 
         $this->assertEquals('a', $this->entity1->getField1());
         $this->assertEquals('b', $this->entity1->getField2());
@@ -163,8 +126,58 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $proxy1->syncEntity();
 
         $this->assertEquals('x', $this->entity1->getField1());
-        $this->assertEquals('b', $this->entity1->getField2());
-        $this->assertEquals('c', $this->entity1->getField3());
+        $this->assertEquals('y', $this->entity1->getField2());
+        $this->assertEquals('z', $this->entity1->getField3());
+    }
+
+    public function testTransformSyncedEntity2()
+    {
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+
+        $sut = new ProxyManager($emMock);
+        $proxy1 = $sut->transform($this->entity2);
+
+        $proxy1->setField1('x');
+        $proxy1->setField2('y');
+        $proxy1->setField3('z');
+
+        $this->assertEquals('x', $this->entity2->getField1());
+        $this->assertEquals('y', $this->entity2->getField2());
+        $this->assertEquals('z', $this->entity2->getField3());
+
+        $proxy1->syncEntity();
+
+        $this->assertEquals('x', $this->entity2->getField1());
+        $this->assertEquals('y', $this->entity2->getField2());
+        $this->assertEquals('z', $this->entity2->getField3());
+    }
+
+    public function testTransformSyncEntity3()
+    {
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+
+        $sut = new ProxyManager($emMock);
+        $proxy1 = $sut->transform($this->entity3);
+
+        $proxy1->setField1('x');
+        $proxy1->setField2('y');
+        $proxy1->setField3('z');
+
+        $this->assertEquals('x', $this->entity3->getField1());
+        $this->assertEquals('b', $this->entity3->getField2());
+        $this->assertEquals('c', $this->entity3->getField3());
+
+        $proxy1->syncEntity();
+
+        $this->assertEquals('x', $this->entity3->getField1());
+        $this->assertEquals('b', $this->entity3->getField2());
+        $this->assertEquals('c', $this->entity3->getField3());
     }
 
     public function testTransformSelectedProperties()
