@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Examples\Encryption\Entities;
 
 /**
  * @Entity
- * @EntityProxy(target="Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy", syncAuto=true, syncProperties={"*"}, syncListeners={"*"})
+ * @EntityProxy(target="Mindgruve\Gordo\Examples\Encryption\Proxies\AttachmentProxy", syncAuto=true, syncProperties={"*"}, syncMethods={"*"})
  */
 class Attachment
 {

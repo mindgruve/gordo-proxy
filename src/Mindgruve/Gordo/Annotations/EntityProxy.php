@@ -29,5 +29,5 @@ class EntityProxy
     /**
      * @var array
      */
-    public $syncListeners = ProxyConstants::SYNC_LISTENERS_ALL;
+    public $syncMethods = ProxyConstants::SYNC_METHODS_ALL;
 }

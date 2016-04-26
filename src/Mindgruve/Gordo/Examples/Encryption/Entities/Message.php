@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @Entity
- * @EntityProxy(target="Mindgruve\Gordo\Examples\Encryption\Proxies\MessageProxy",syncProperties={"*"},syncListeners={"*"})
+ * @EntityProxy(target="Mindgruve\Gordo\Examples\Encryption\Proxies\MessageProxy",syncProperties={"*"},syncMethods={"*"})
  */
 
 class Message

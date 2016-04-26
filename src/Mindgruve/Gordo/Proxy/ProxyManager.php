@@ -68,7 +68,7 @@ class ProxyManager
     public function transform($object,
         $syncAuto = null,
         $syncProperties = null,
-        $syncListeners = null,
+        $syncMethods = null,
         Hydrator $hydrator = null,
         Transformer $transformer = null
     )

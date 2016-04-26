@@ -156,13 +156,13 @@ There are a couple of annotations that you can put on your entity to configure t
 |---|---|---|
 | syncAuto  | Boolean that controls if automatic syncing enabled  | True (enabled)  |
 | syncProperties  | Array of properties to sync  | All properties are synced  |
-| syncListeners  | Methods that initiate a sync to entity  | All setters/getters  |
+| syncMethods  | Methods that initiate a sync to entity  | All setters/getters  |
 
 **Example:** Sync all properties, but only when username is updated
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncListeners={"setUsername"},syncAuto=true)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncMethods={"setUsername"},syncAuto=true)
      */
 
 **Example:** Sync only the password

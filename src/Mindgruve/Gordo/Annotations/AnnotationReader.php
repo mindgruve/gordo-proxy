@@ -132,13 +132,13 @@ class AnnotationReader
      * @param $class
      * @return array|null
      */
-    public function getProxySyncListeners($class){
+    public function getProxySyncMethods($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
-            if($annotations->syncListeners == array('*')){
-                return ProxyConstants::SYNC_LISTENERS_ALL;
+            if($annotations->syncMethods == array('*')){
+                return ProxyConstants::SYNC_METHODS_ALL;
             }
-            return $annotations->syncListeners;
+            return $annotations->syncMethods;
         }
 
         return null;

@@ -130,11 +130,11 @@ class Transformer
             $syncAuto = $this->annotationReader->getProxySyncAuto($this->class);
             if ($syncAuto) {
 
-                $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
-                if ($syncedListeners == ProxyConstants::SYNC_LISTENERS_ALL) {
-                    $syncedListeners = array();
+                $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
+                if ($syncMethods == ProxyConstants::SYNC_METHODS_ALL) {
+                    $syncMethods = array();
                     foreach (array_keys($objSrcData) as $property) {
-                        $syncedListeners[] = Inflector::camelize('set_' . $property);
+                        $syncMethods[] = Inflector::camelize('set_' . $property);
                     }
                     foreach ($associations as $associationKey => $association) {
                         $associationKey = Inflector::singularize($associationKey);
@@ -145,9 +145,9 @@ class Transformer
                     }
                 }
 
-                foreach ($syncedListeners as $syncListener) {
+                foreach ($syncMethods as $syncMethod) {
                     $proxy->setMethodSuffixInterceptor(
-                        $syncListener,
+                        $syncMethod,
                         function ($proxy, $instance) {
                             $instance->syncEntity();
                         }

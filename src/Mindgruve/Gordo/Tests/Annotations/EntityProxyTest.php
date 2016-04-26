@@ -12,7 +12,7 @@ class EntityProxyTest extends \PHPUnit_Framework_TestCase
         $this->assertClassHasAttribute('target', get_class($sut));
         $this->assertClassHasAttribute('syncAuto', get_class($sut));
         $this->assertClassHasAttribute('syncProperties', get_class($sut));
-        $this->assertClassHasAttribute('syncListeners', get_class($sut));
+        $this->assertClassHasAttribute('syncMethods', get_class($sut));
     }
 
 }
