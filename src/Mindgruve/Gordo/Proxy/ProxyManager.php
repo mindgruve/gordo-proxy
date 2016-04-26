@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gordo\Proxy;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 
@@ -54,7 +55,7 @@ class ProxyManager
     /**
      * @return AnnotationReader
      */
-    public function getAnnotionReader()
+    public function getAnnotationReader()
     {
         return $this->annotationReader;
     }
@@ -71,13 +72,21 @@ class ProxyManager
         Hydrator $hydrator = null,
         Transformer $transformer = null
     ) {
-        if (is_array($item)) {
+
+        if ($item instanceof ArrayCollection) {
+            return $this->transformArrayCollection($item);
+        } elseif (is_array($item)) {
             return $this->transformArray($item, $hydrator, $transformer);
         } elseif (is_object($item)) {
             return $this->transformObject($item, $hydrator, $transformer);
         }
 
         throw new \Exception('Unable to transform item');
+    }
+
+    public function transformArrayCollection(ArrayCollection $arrayCollection)
+    {
+        return new ArrayCollection($this->transform($arrayCollection->toArray()));
     }
 
     /**
@@ -170,6 +179,7 @@ class ProxyManager
                 return $factory->build($ProxyClass);
             }
         }
+
         return new $ProxyClass();
 
     }
