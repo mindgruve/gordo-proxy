@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Mindgruve\Gordo\Proxy\Constants;
 use Mindgruve\Gordo\Proxy\ProxyManager;
+use Mindgruve\Gordo\Tests\Entity\TestAssociation1;
+use Mindgruve\Gordo\Tests\Entity\TestAssociationProxy1;
 use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 use Mindgruve\Gordo\Tests\Entity\TestEntity2;
 use Mindgruve\Gordo\Tests\Entity\TestEntity3;
@@ -300,7 +302,8 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('3', $proxy4->getField3());
     }
 
-    public function testTransformingArray(){
+    public function testTransformingArray()
+    {
         $array = array($this->dataObject1, $this->dataObject2, $this->dataObject3, $this->dataObject4);
 
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
@@ -311,7 +314,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $sut = new ProxyManager($emMock);
         $proxyArray = $sut->transform($array);
 
-        $this->assertEquals(4,count($proxyArray));
+        $this->assertEquals(4, count($proxyArray));
         $this->assertTrue(is_array($proxyArray));
         $this->assertTrue($proxyArray[0] instanceof TestProxy1);
         $this->assertTrue($proxyArray[1] instanceof TestProxy2);
@@ -319,7 +322,8 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($proxyArray[3] instanceof TestProxy4);
     }
 
-    public function testTransformingArrayCollection(){
+    public function testTransformingArrayCollection()
+    {
         $array = array($this->dataObject1, $this->dataObject2, $this->dataObject3, $this->dataObject4);
         $arrayCollection = new ArrayCollection($array);
 
@@ -331,7 +335,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $sut = new ProxyManager($emMock);
         $proxyArray = $sut->transform($arrayCollection);
 
-        $this->assertEquals(4,count($proxyArray));
+        $this->assertEquals(4, count($proxyArray));
         $this->assertTrue($proxyArray instanceof ArrayCollection);
         $this->assertTrue($proxyArray[0] instanceof TestProxy1);
         $this->assertTrue($proxyArray[1] instanceof TestProxy2);
@@ -339,11 +343,56 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($proxyArray[3] instanceof TestProxy4);
     }
 
-    public function testAssociations(){
+
+    public function testOneToOneAssociation()
+    {
+        $association1 = new TestAssociation1();
+        $association1->setField1('a');
+        $this->dataObject1->setAssociation1($association1);
+
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array('association1' => array()));
+
+        $sut = new ProxyManager($emMock);
+        $proxy = $sut->transform($this->dataObject1);
+
+        $this->assertTrue($proxy->getAssociation1() instanceof TestAssociationProxy1);
+        $this->assertEquals('a', $proxy->getAssociation1()->getField1());
 
     }
 
-    public function testLazyLoadingAssociations(){
+    public function testManyToOneAssociation()
+    {
+        $association1 = new TestAssociation1();
+        $association1->setField1('a');
 
+        $association2 = new TestAssociation1();
+        $association2->setField1('b');
+
+        $collection = new ArrayCollection(array($association1, $association2));
+        $this->dataObject1->setAssociation2($collection);
+
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(
+            array('association1' => array(), 'association2' => array())
+        );
+
+        $sut = new ProxyManager($emMock);
+        $proxy = $sut->transform($this->dataObject1);
+
+        $this->assertTrue($proxy->getAssociation2() instanceof ArrayCollection);
+        $this->assertEquals(2, count($proxy->getAssociation2()));
+
+        $item1 = $proxy->getAssociation2()[0];
+        $item2 = $proxy->getAssociation2()[1];
+
+        $this->assertTrue($item1 instanceof TestAssociationProxy1);
+        $this->assertEquals('a', $item1->getField1());
+        $this->assertTrue($item2 instanceof TestAssociationProxy1);
+        $this->assertEquals('b', $item2->getField1());
     }
 }

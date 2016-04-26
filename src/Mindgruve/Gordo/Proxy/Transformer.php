@@ -3,10 +3,11 @@
 namespace Mindgruve\Gordo\Proxy;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
+use ProxyManager\Factory\LazyLoadingValueHolderFactory;
+use ProxyManager\Proxy\LazyLoadingInterface;
 
 use GeneratedHydrator\Configuration;
 
@@ -17,11 +18,6 @@ class Transformer
      * @var
      */
     protected $class;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $em;
 
     /**
      * @var AnnotationReader
@@ -43,16 +39,15 @@ class Transformer
      * Constructor
      *
      * @param $class
-     * @param EntityManagerInterface $em
      * @param AnnotationReader $annotationReader
+     * @param ProxyManager $proxyManager
+     * @internal param EntityManagerInterface $em
      */
     public function __construct(
         $class,
-        EntityManagerInterface $em,
         AnnotationReader $annotationReader,
         ProxyManager $proxyManager
     ) {
-        $this->em = $em;
         $this->class = $class;
         $this->annotationReader = $annotationReader;
         $this->proxyManager = $proxyManager;
@@ -63,8 +58,7 @@ class Transformer
     }
 
     /**
-     * Transform Entity to a new Object
-     * If the target Object has the Proxy trait, then it will also generate a proxy class
+     * Transform Entity to proxy object
      *
      * @param $objSrc
      * @return mixed
@@ -80,18 +74,52 @@ class Transformer
             $doctrineAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
             $associations = $doctrineAnnotations->getAssociationMappings();
 
+            /**
+             * Lazy Load Associations
+             */
             foreach ($associations as $key => $association) {
                 if (isset($objSrcData[$key])) {
-                    $collection = $objSrcData[$key];
-                    $items = array();
-                    foreach ($collection as $item) {
-                        $items[] = $item;
+                    $propertyValue = $objSrcData[$key];
+                    $factory = new LazyLoadingValueHolderFactory();
+                    $initializer = function (
+                        & $wrappedObject,
+                        LazyLoadingInterface $proxy,
+                        $method,
+                        array $parameters,
+                        & $initializer
+                    ) use ($propertyValue) {
+                        $initializer = null;
+                        if ($propertyValue instanceof ArrayCollection) {
+                            $items = array();
+                            foreach ($propertyValue as $item) {
+                                $items[] = $this->proxyManager->transform($item);
+                            }
+                            $wrappedObject = new ArrayCollection($items);
+                        } else {
+                            $wrappedObject = $this->proxyManager->transform($propertyValue);
+                        }
+
+                        return true;
+                    };
+
+                    if ($propertyValue instanceof ArrayCollection) {
+                        $objSrcData[$key] = $factory->createProxy(
+                            'Doctrine\Common\Collections\ArrayCollection',
+                            $initializer
+                        );
+                    } else {
+                        $objSrcData[$key] = $factory->createProxy(
+                            $this->annotationReader->getProxyTargetClass(get_class($propertyValue)),
+                            $initializer
+                        );
                     }
-                    $objSrcData[$key] = new ArrayCollection($items);
                 }
             }
             $objDest = $this->proxyManager->instantiate($proxyClass);
 
+            /**
+             * Throw Exceptions
+             */
             if (!$objDest instanceof $objSrc) {
                 throw new \Exception(
                     'The proxy target class should extend the underlying data object.  Proxy Class: ' . $proxyClass
@@ -104,33 +132,22 @@ class Transformer
                 );
             }
 
+            /**
+             * Hydrate the data
+             */
             $this->hydrate($objSrcData, $objDest);
-            $reflectionClass = new \ReflectionClass($objDest);
 
-            $reflectionProperty = $reflectionClass->getProperty('dataObject');
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($objDest, $objSrc);
-            $reflectionProperty->setAccessible(false);
-
-            $reflectionProperty = $reflectionClass->getProperty('transformer');
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($objDest, $this);
-            $reflectionProperty->setAccessible(false);
-
-
+            /**
+             * Sync Properties
+             */
             $syncProperties = $this->annotationReader->getProxySyncedProperties($this->class);
             if ($syncProperties == Constants::SYNC_PROPERTIES_ALL) {
                 $syncProperties = array_keys($objSrcData);
             }
 
-            $reflectionProperty = $reflectionClass->getProperty('syncProperties');
-            $reflectionProperty->setAccessible(true);
-            $reflectionProperty->setValue($objDest, $syncProperties);
-            $reflectionProperty->setAccessible(false);
-
-            $factory = new Factory();
-            $proxy = $factory->createProxy($objDest, array());
-
+            /**
+             * Sync Methods
+             */
             $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
             if ($syncMethods == Constants::SYNC_METHODS_ALL) {
                 $syncMethods = array();
@@ -149,11 +166,27 @@ class Transformer
                 $syncMethods = array();
             }
 
+            /**
+             * Set properties on proxied object
+             */
+            PropertyAccess::set($objDest, 'dataObject', $objSrc);
+            PropertyAccess::set($objDest, 'transformer', $this);
+            PropertyAccess::set($objDest, 'syncProperties', $syncProperties);
+            PropertyAccess::set($objDest, 'syncMethods', $syncMethods);
+
+            /**
+             * Attach Interceptors
+             */
+            $factory = new Factory();
+            $proxy = $factory->createProxy($objDest, array());
             foreach ($syncMethods as $syncMethod) {
                 $proxy->setMethodSuffixInterceptor(
                     $syncMethod,
-                    function ($proxy, $instance) {
-                        $instance->syncData();
+                    function ($proxy, $instance) use ($syncMethod) {
+                        $syncMethods = PropertyAccess::get($instance, 'syncMethods');
+                        if (is_array($syncMethods) && in_array($syncMethod, $syncMethods)) {
+                            $instance->syncData();
+                        }
                     }
                 );
             }
@@ -201,17 +234,17 @@ class Transformer
         $srcData = $this->extract($objSrc);
         $destData = $this->extract($objDest);
 
-        if($properties == Constants::SYNC_PROPERTIES_ALL){
+        if ($properties == Constants::SYNC_PROPERTIES_ALL) {
             $properties = array_keys($srcData);
         }
 
-        if(!is_array($properties)){
+        if (!is_array($properties)) {
             throw new \Exception('Properties should be either Constants::SYNC_PROPERTIES_ALL or an array');
         }
 
         $newValues = $destData;
-        foreach($destData as $key => $value){
-            if(in_array($key, $properties)){
+        foreach ($destData as $key => $value) {
+            if (in_array($key, $properties)) {
                 $newValues[$key] = $srcData[$key];
             }
         }

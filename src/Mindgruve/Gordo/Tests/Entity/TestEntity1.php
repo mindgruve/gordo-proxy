@@ -2,6 +2,8 @@
 
 namespace Mindgruve\Gordo\Tests\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * @Entity
  * @Proxy(target="Mindgruve\Gordo\Tests\Entity\TestProxy1")
@@ -23,6 +25,18 @@ class TestEntity1
 
     /** @Column(length=140, name="email") */
     protected $field3;
+
+    /**
+     * @OneToOne(targetEntity="TestAssociation1")
+     * @JoinColumn(name="association1_id", referencedColumnName="id")
+     */
+    protected $association1;
+
+    /**
+     * @ManytoOne(targetEntity="TestAssociation1")
+     * @JoinColumn(name="association2_id", referencedColumnName="id")
+     */
+    protected $association2;
 
     public function getId()
     {
@@ -59,4 +73,37 @@ class TestEntity1
         $this->field3 = $field3;
     }
 
+    public function __construct()
+    {
+        $this->association2 = new ArrayCollection();
+    }
+
+    public function setAssociation1(TestAssociation1 $association1)
+    {
+        $this->association1 = $association1;
+    }
+
+    public function getAssociation1()
+    {
+        return $this->association1;
+    }
+
+    public function addAssociation2(TestAssociation1 $association)
+    {
+        $this->association2->add($association);
+    }
+
+    public function removeAssociation2(TestAssociation1 $association)
+    {
+        $this->association2->remove($association);
+    }
+
+    public function setAssociation2(ArrayCollection  $association2)
+    {
+        $this->association2 = $association2;
+    }
+
+    public function getAssociation2(){
+        return $this->association2;
+    }
 }

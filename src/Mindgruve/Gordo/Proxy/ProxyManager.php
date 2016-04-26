@@ -121,7 +121,6 @@ class ProxyManager
             if (!isset($this->transformers[$class])) {
                 $this->transformers[$class] = new Transformer(
                     $class,
-                    $this->em,
                     $this->annotationReader,
                     $this
                 );

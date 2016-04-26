@@ -34,6 +34,12 @@ class Message
     protected $attachments;
 
     /**
+     * @OneToOne(targetEntity="Attachment")
+     * @JoinColumn(name="attachment_id", referencedColumnName="id")
+     */
+    protected $attachment;
+
+    /**
      * @return int
      */
     public function getId()

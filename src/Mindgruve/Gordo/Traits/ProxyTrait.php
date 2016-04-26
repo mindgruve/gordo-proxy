@@ -15,6 +15,11 @@ trait ProxyTrait
     protected $syncProperties = array();
 
     /**
+     * @var array
+     */
+    protected $syncMethods = array();
+
+    /**
      * @var Transformer
      */
     protected $transformer;
