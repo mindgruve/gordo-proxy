@@ -154,7 +154,7 @@ There are a couple of annotations that you can put on your entity to configure t
 
 |  Property | Description  | Default  |
 |---|---|---|
-| syncAuto  | Boolean that controls if automatic syncing enabled  | True (enabled)  |
+| sync  | "auto" or "manual"  | "auto"  |
 | syncProperties  | Array of properties to sync  | All properties are synced  |
 | syncMethods  | Methods that initiate a sync to entity  | All setters/getters  |
 
@@ -162,21 +162,21 @@ There are a couple of annotations that you can put on your entity to configure t
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncMethods={"setUsername"},syncAuto=true)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncMethods={"setUsername"},sync="auto")
      */
 
 **Example:** Sync only the password
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},syncAuto=true)
+     * @EntityProxy(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},sync="auto")
      */
 
 **Example:** Turning off automatic syncing
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncAuto=false)
+     * @EntityProxy(target="Gordo\Example\UserProxy",sync="auto")
      */
 
 

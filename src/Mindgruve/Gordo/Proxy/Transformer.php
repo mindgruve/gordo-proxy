@@ -127,8 +127,8 @@ class Transformer
             $factory = new Factory();
             $proxy = $factory->createProxy($objDest, array());
 
-            $syncAuto = $this->annotationReader->getProxySyncAuto($this->class);
-            if ($syncAuto) {
+            $sync = $this->annotationReader->getProxySyncAuto($this->class);
+            if ($sync == ProxyConstants::SYNC_AUTOMATIC) {
 
                 $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
                 if ($syncMethods == ProxyConstants::SYNC_METHODS_ALL) {

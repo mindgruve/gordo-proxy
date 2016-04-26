@@ -66,7 +66,7 @@ class ProxyManager
      * @return mixed
      */
     public function transform($object,
-        $syncAuto = null,
+        $sync = null,
         $syncProperties = null,
         $syncMethods = null,
         Hydrator $hydrator = null,

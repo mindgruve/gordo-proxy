@@ -17,8 +17,8 @@ class ProxyConstants
     const SYNC_PROPERTIES_NONE = 7;
     const SYNC_METHODS_NONE = 8;
 
-    const SYNC_AUTOMATIC = 9;
-    const SYNC_MANUAL = 10;
+    const SYNC_AUTOMATIC = 'auto';
+    const SYNC_MANUAL = 'manual';
 
 
 

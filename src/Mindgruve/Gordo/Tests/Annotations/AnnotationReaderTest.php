@@ -41,7 +41,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($proxyAnnotation instanceof EntityProxy);
         $this->assertEquals('Mindgruve\Gordo\Tests\Entity\TestProxy1', $proxyAnnotation->target);
-        $this->assertEquals(false, $proxyAnnotation->syncAuto);
+        $this->assertEquals(ProxyConstants::SYNC_MANUAL, $proxyAnnotation->sync);
         $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $proxyAnnotation->syncProperties);
         $this->assertEquals(ProxyConstants::SYNC_METHODS_ALL, $proxyAnnotation->syncMethods);
     }
@@ -88,7 +88,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncAuto('Mindgruve\Gordo\Tests\Entity\TestEntity1');
-        $this->assertEquals(false, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_MANUAL, $properties);
     }
 
     public function testGetProxySyncAuto2()
@@ -97,7 +97,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncAuto('Mindgruve\Gordo\Tests\Entity\TestEntity2');
-        $this->assertEquals(true, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_AUTOMATIC, $properties);
     }
 
     public function testGetProxySyncAuto3()
@@ -106,7 +106,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncAuto('Mindgruve\Gordo\Tests\Entity\TestEntity3');
-        $this->assertEquals(true, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_AUTOMATIC, $properties);
     }
 
     public function testGetProxySyncAuto4()
@@ -115,7 +115,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncAuto('Mindgruve\Gordo\Tests\Entity\TestEntity4');
-        $this->assertEquals(false, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_MANUAL, $properties);
     }
 
     public function testGetProxySyncListeners1()

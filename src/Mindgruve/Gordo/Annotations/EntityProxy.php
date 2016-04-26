@@ -17,9 +17,9 @@ class EntityProxy
     public $target;
 
     /**
-     * @var bool
+     * @var string
      */
-    public $syncAuto = false;
+    public $sync = ProxyConstants::SYNC_MANUAL;
 
     /**
      * @var array

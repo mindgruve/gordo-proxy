@@ -119,10 +119,10 @@ class AnnotationReader
     public function getProxySyncAuto($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
-            return $annotations->syncAuto;
+            return $annotations->sync;
         }
 
-        return false;
+        return ProxyConstants::SYNC_MANUAL;
     }
 
     /**
