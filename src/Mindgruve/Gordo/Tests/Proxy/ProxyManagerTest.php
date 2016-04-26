@@ -2,6 +2,7 @@
 
 namespace Mindgruve\Gordo\Tests\Proxy;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Mindgruve\Gordo\Proxy\Hydrator;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Mindgruve\Gordo\Proxy\ProxyConstants;
@@ -11,6 +12,9 @@ use Mindgruve\Gordo\Tests\Entity\TestEntity2;
 use Mindgruve\Gordo\Tests\Entity\TestEntity3;
 use Mindgruve\Gordo\Tests\Entity\TestEntity4;
 use Mindgruve\Gordo\Tests\Entity\TestProxy1;
+use Mindgruve\Gordo\Tests\Entity\TestProxy2;
+use Mindgruve\Gordo\Tests\Entity\TestProxy3;
+use Mindgruve\Gordo\Tests\Entity\TestProxy4;
 use Mockery;
 
 class ProxyManagerTest extends \PHPUnit_Framework_TestCase
@@ -301,5 +305,48 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('1', $proxy4->getField1());
         $this->assertEquals('2', $proxy4->getField2());
         $this->assertEquals('3', $proxy4->getField3());
+    }
+
+    public function testTransformingArray(){
+        $array = array($this->dataObject1, $this->dataObject2, $this->dataObject3, $this->dataObject4);
+
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+
+        $sut = new ProxyManager($emMock);
+        $proxyArray = $sut->transform($array);
+
+        $this->assertTrue($proxyArray[0] instanceof TestProxy1);
+        $this->assertTrue($proxyArray[1] instanceof TestProxy2);
+        $this->assertTrue($proxyArray[2] instanceof TestProxy3);
+        $this->assertTrue($proxyArray[3] instanceof TestProxy4);
+    }
+
+    public function testTransformingArrayCollection(){
+//        $array = array($this->dataObject1, $this->dataObject2, $this->dataObject3, $this->dataObject4);
+//        $arrayCollection = new ArrayCollection($array);
+//
+//        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+//        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+//        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+//        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+//
+//        $sut = new ProxyManager($emMock);
+//        $proxyArray = $sut->transform($arrayCollection);
+//
+//        $this->assertTrue($proxyArray[0] instanceof TestProxy1);
+//        $this->assertTrue($proxyArray[1] instanceof TestProxy2);
+//        $this->assertTrue($proxyArray[2] instanceof TestProxy3);
+//        $this->assertTrue($proxyArray[3] instanceof TestProxy4);
+    }
+
+    public function testAssociations(){
+
+    }
+
+    public function testLazyLoadingAssociations(){
+
     }
 }

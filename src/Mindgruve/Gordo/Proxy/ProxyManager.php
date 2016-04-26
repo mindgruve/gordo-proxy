@@ -60,19 +60,57 @@ class ProxyManager
     }
 
     /**
+     * @param $item
+     * @param Hydrator $hydrator
+     * @param Transformer $transformer
+     * @return array|mixed
+     * @throws \Exception
+     */
+    public function transform(
+        $item,
+        Hydrator $hydrator = null,
+        Transformer $transformer = null
+    ) {
+        if (is_array($item)) {
+            return $this->transformArray($item, $hydrator, $transformer);
+        } elseif (is_object($item)) {
+            return $this->transformObject($item, $hydrator, $transformer);
+        }
+
+        throw new \Exception('Unable to transform item');
+    }
+
+    /**
+     * @param array $array
+     * @param Hydrator $hydrator
+     * @param Transformer $transformer
+     * @return array
+     * @throws \Exception
+     */
+    public function transformArray(
+        array $array,
+        Hydrator $hydrator = null,
+        Transformer $transformer = null
+    ) {
+        $return = array();
+        foreach ($array as $item) {
+            $return[] = $this->transform($item, $hydrator, $transformer);
+        }
+
+        return $return;
+    }
+
+    /**
      * @param $object
      * @param Hydrator $hydrator
      * @param Transformer $transformer
      * @return mixed
      */
-    public function transform($object,
-        $sync = null,
-        $syncProperties = null,
-        $syncMethods = null,
+    public function transformObject(
+        $object,
         Hydrator $hydrator = null,
         Transformer $transformer = null
-    )
-    {
+    ) {
         $class = get_class($object);
 
         if (!$hydrator) {
@@ -132,7 +170,6 @@ class ProxyManager
                 return $factory->build($ProxyClass);
             }
         }
-
         return new $ProxyClass();
 
     }
