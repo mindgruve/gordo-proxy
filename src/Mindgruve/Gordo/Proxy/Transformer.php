@@ -127,7 +127,6 @@ class Transformer
             $factory = new Factory();
             $proxy = $factory->createProxy($objDest, array());
 
-
             $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
             if ($syncMethods == ProxyConstants::SYNC_METHODS_ALL) {
                 $syncMethods = array();
@@ -137,10 +136,10 @@ class Transformer
                 foreach ($associations as $associationKey => $association) {
                     $associationKey = Inflector::singularize($associationKey);
                     $associationKeyPlural = Inflector::pluralize($associationKey);
-                    $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
-                    $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
-                    $syncedListeners[] = Inflector::camelize('set_' . $associationKeyPlural);
-                    $syncedListeners[] = Inflector::camelize('set_' . $associationKey);
+                    $syncMethods[] = Inflector::camelize('add_' . $associationKey);
+                    $syncMethods[] = Inflector::camelize('remove_' . $associationKey);
+                    $syncMethods[] = Inflector::camelize('set_' . $associationKeyPlural);
+                    $syncMethods[] = Inflector::camelize('set_' . $associationKey);
                 }
             } elseif ($syncMethods == ProxyConstants::SYNC_METHODS_NONE) {
                 $syncMethods = array();
