@@ -1,7 +1,9 @@
 <?php
 
 namespace Mindgruve\Gordo\Traits;
+
 use Mindgruve\Gordo\Proxy\Hydrator;
+use Mindgruve\Gordo\Proxy\ProxyConstants;
 
 trait EntityProxyTrait
 {
@@ -26,30 +28,25 @@ trait EntityProxyTrait
     }
 
     /**
-     * Sync the fields from the proxy --> entity
+     * Sync the fields
+     * If $syncDirection ==  ProxyConstants::SYNC_FROM_PROXY    proxy --> entity
+     * If $syncDirection ==  ProxyConstants::SYNC_FROM_ENTITY   entity --> proxy
      *
-     * @param array $properties
+     * @param $properties
+     * @param $syncDirection
      */
-    public function syncToEntity(array $properties = null)
-    {
+    public function syncEntity(
+        $properties = null,
+        $syncDirection = ProxyConstants::SYNC_FROM_PROXY
+    ) {
         if (!$properties) {
             $properties = $this->syncProperties;
         }
-        $this->hydrator->transfer($this, $this->entity, $properties);
-    }
 
-    /**
-     * Sync the fields from entity --> proxy
-     *
-     * @param array $properties
-     */
-    public function syncFromEntity(array $properties = null)
-    {
-        if (!$properties) {
-            $properties = $this->syncProperties;
+        if ($syncDirection == ProxyConstants::SYNC_FROM_PROXY) {
+            $this->hydrator->transfer($this, $this->entity, $properties);
+        } elseif ($syncDirection == ProxyConstants::SYNC_FROM_ENTITY) {
+            $this->hydrator->transfer($this->entity, $this, $properties);
         }
-        $this->hydrator->transfer($this->entity, $this, $properties);
     }
-
-
 }

@@ -2,6 +2,8 @@
 
 namespace Mindgruve\Gordo\Annotations;
 
+use Mindgruve\Gordo\Proxy\ProxyConstants;
+
 /**
  * @Annotation
  * @Target("CLASS")
@@ -22,10 +24,10 @@ class EntityProxy
     /**
      * @var array
      */
-    public $syncProperties = array();
+    public $syncProperties = ProxyConstants::SYNC_ALL_PROPERTIES;
 
     /**
      * @var array
      */
-    public $syncListeners = array();
+    public $syncListeners = ProxyConstants::SYNC_ALL_LISTENERS;
 }

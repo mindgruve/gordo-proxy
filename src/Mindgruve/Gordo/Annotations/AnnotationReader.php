@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use Mindgruve\Gordo\Proxy\ProxyConstants;
 
 class AnnotationReader
 {
@@ -99,6 +100,10 @@ class AnnotationReader
     public function getProxySyncedProperties($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
+            if($annotations->syncProperties == array('*')){
+                return ProxyConstants::SYNC_ALL_PROPERTIES;
+            }
+
             return $annotations->syncProperties;
         }
 
@@ -130,6 +135,9 @@ class AnnotationReader
     public function getProxySyncListeners($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
+            if($annotations->syncListeners == array('*')){
+                return ProxyConstants::SYNC_ALL_LISTENERS;
+            }
             return $annotations->syncListeners;
         }
 

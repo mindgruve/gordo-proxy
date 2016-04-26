@@ -53,19 +53,23 @@ class Hydrator
 
     /**
      * Transfer the data stored in one object to another
-     *
      * @param $objSrc
      * @param $objDest
-     * @param array $properties
+     * @param int|array $properties
      * @return object
+     * @throws \Exception
      */
-    public function transfer($objSrc, $objDest, array $properties = null)
+    public function transfer($objSrc, $objDest, $properties = ProxyConstants::SYNC_ALL_PROPERTIES)
     {
         $srcData = $this->extract($objSrc);
         $destData = $this->extract($objDest);
 
-        if(is_null($properties)){
+        if($properties == ProxyConstants::SYNC_ALL_PROPERTIES){
             $properties = array_keys($srcData);
+        }
+
+        if(!is_array($properties)){
+            throw new \Exception('Properties should be either ProxyConstants::SYNC_ALL_PROPERTIES or an array');
         }
 
         $newValues = $destData;

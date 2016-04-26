@@ -33,9 +33,9 @@ $messageProxy = $proxyManager->transform($message);
 $messageProxy->setMessage('kevin');
 $messageProxy->setEmail('test@test.com');
 //$messageProxy->setDate(new \DateTime('3/14/2015'));
-$messageProxy->syncToEntity();
+$messageProxy->syncEntity();
 var_dump($message->getMessage());
 
 
-$testEntity1 = new \Mindgruve\Gordo\Tests\TestEntity1();
+$testEntity1 = new \Mindgruve\Gordo\Tests\Entity\TestEntity1();
 $testProxy1 = $proxyManager->transform($testEntity1);

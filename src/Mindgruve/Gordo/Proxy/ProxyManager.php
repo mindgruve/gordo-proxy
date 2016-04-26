@@ -21,17 +21,17 @@ class ProxyManager
     /**
      * @var array
      */
-    protected $transformers;
+    protected $transformers = array();
 
     /**
      * @var array
      */
-    protected $factories;
+    protected $factories = array();
 
     /**
      * @var array
      */
-    protected $hydrators;
+    protected $hydrators = array();
 
 
     /**
@@ -52,6 +52,14 @@ class ProxyManager
     }
 
     /**
+     * @return AnnotationReader
+     */
+    public function getAnnotionReader()
+    {
+        return $this->annotationReader;
+    }
+
+    /**
      * @param $object
      * @param Hydrator $hydrator
      * @param Transformer $transformer
@@ -65,7 +73,7 @@ class ProxyManager
             if (!isset($this->hydrators[$class])) {
                 $this->hydrators[$class] = new Hydrator($class);
             }
-            $hydrator =$this->hydrators[$class];
+            $hydrator = $this->hydrators[$class];
         }
 
         if (!$transformer) {

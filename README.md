@@ -180,7 +180,7 @@ There are a couple of annotations that you can put on your entity to configure t
      */
 
 
-You can also manually update the entity by calling the method syncToEntity() or by accessing the protected property $entity inside your Proxy.
+You can also manually update the entity by calling the method syncEntity() or by accessing the protected property $entity inside your Proxy.
 
 
 
