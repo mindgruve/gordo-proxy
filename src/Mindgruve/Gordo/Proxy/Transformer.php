@@ -73,8 +73,8 @@ class Transformer
 
         if ($proxyClass != $this->class) {
 
-            $entityAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
-            $associations = $entityAnnotations->getAssociationMappings();
+            $doctrineAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
+            $associations = $doctrineAnnotations->getAssociationMappings();
 
             foreach ($associations as $key => $association) {
                 if (isset($objSrcData[$key])) {
@@ -90,7 +90,7 @@ class Transformer
 
             if (!$objDest instanceof $objSrc) {
                 throw new \Exception(
-                    'The proxy target class should extend the underlying entity.  Proxy Class: ' . $proxyClass
+                    'The proxy target class should extend the underlying data object.  Proxy Class: ' . $proxyClass
                 );
             }
 

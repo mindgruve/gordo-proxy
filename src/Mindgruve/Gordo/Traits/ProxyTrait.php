@@ -29,14 +29,14 @@ trait ProxyTrait
 
     /**
      * Sync the fields
-     * If $syncDirection ==  ProxyConstants::UPDATE_ENTITY    proxy --> entity
-     * If $syncDirection ==  ProxyConstants::UPDATE_PROXY   entity --> proxy
+     * If $syncDirection ==  ProxyConstants::UPDATE_DATA_OBJECT     proxy --> data object
+     * If $syncDirection ==  ProxyConstants::UPDATE_PROXY           data object --> proxy
      *
      * @param $syncDirection
      * @param $properties
      */
     public function syncData(
-        $syncDirection = ProxyConstants::UPDATE_ENTITY,
+        $syncDirection = ProxyConstants::UPDATE_DATA_OBJECT,
         $properties = ProxyConstants::SYNC_PROPERTIES_DEFAULT
     ) {
         if ($properties == ProxyConstants::SYNC_PROPERTIES_DEFAULT) {
@@ -45,7 +45,7 @@ trait ProxyTrait
             $properties = array();
         }
 
-        if ($syncDirection == ProxyConstants::UPDATE_ENTITY) {
+        if ($syncDirection == ProxyConstants::UPDATE_DATA_OBJECT) {
             $this->hydrator->transfer($this, $this->dataObject, $properties);
         } elseif ($syncDirection == ProxyConstants::UPDATE_PROXY) {
             $this->hydrator->transfer($this->dataObject, $this, $properties);

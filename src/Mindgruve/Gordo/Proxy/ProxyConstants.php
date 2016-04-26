@@ -5,7 +5,7 @@ namespace Mindgruve\Gordo\Proxy;
 class ProxyConstants
 {
 
-    const UPDATE_ENTITY = 1;
+    const UPDATE_DATA_OBJECT = 1;
     const UPDATE_PROXY = 2;
 
     const SYNC_PROPERTIES_ALL = 3;

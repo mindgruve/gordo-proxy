@@ -91,7 +91,7 @@ class AnnotationReader
     }
 
     /**
-     * Default properties that will be copied over to entity when syncData is called
+     * Default properties that will be copied over to doctrine data object when syncData is called
      * An empty array is interpreted as all properties
      *
      * @param $class

@@ -16,20 +16,20 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
     /**
      * @var TestEntity1
      */
-    protected $entity1;
+    protected $dataObject1;
 
     /**
      * Data Fixture SETUP
      */
     public function setup()
     {
-        $entity1 = new TestEntity1();
-        $entity1->setField1('a');
-        $entity1->setField2('b');
-        $entity1->setField3('c');
-        $this->entity1 = $entity1;
+        $dataObject1 = new TestEntity1();
+        $dataObject1->setField1('a');
+        $dataObject1->setField2('b');
+        $dataObject1->setField3('c');
+        $this->dataObject1 = $dataObject1;
 
-        $hydrator = new Hydrator(get_class($entity1));
+        $hydrator = new Hydrator(get_class($dataObject1));
         $this->hydrator = $hydrator;
     }
 
@@ -45,7 +45,7 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
                 'field2' => 'b',
                 'field3' => 'c',
             ),
-            $this->hydrator->extract($this->entity1)
+            $this->hydrator->extract($this->dataObject1)
         );
     }
 
@@ -62,13 +62,13 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
                 'field2' => 'y',
                 'field3' => 'z'
             ),
-            $this->entity1
+            $this->dataObject1
         );
 
-        $this->assertEquals(1, $this->entity1->getId());
-        $this->assertEquals('x', $this->entity1->getField1());
-        $this->assertEquals('y', $this->entity1->getField2());
-        $this->assertEquals('z', $this->entity1->getField3());
+        $this->assertEquals(1, $this->dataObject1->getId());
+        $this->assertEquals('x', $this->dataObject1->getField1());
+        $this->assertEquals('y', $this->dataObject1->getField2());
+        $this->assertEquals('z', $this->dataObject1->getField3());
 
     }
 
@@ -77,22 +77,22 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransfer()
     {
-        $entity2 = new TestEntity1();
-        $entity2->setField1('x');
-        $entity2->setField2('y');
-        $entity2->setField3('z');
+        $dataObject2 = new TestEntity1();
+        $dataObject2->setField1('x');
+        $dataObject2->setField2('y');
+        $dataObject2->setField3('z');
 
-        $this->assertEquals(null, $entity2->getId());
-        $this->assertEquals('x', $entity2->getField1());
-        $this->assertEquals('y', $entity2->getField2());
-        $this->assertEquals('z', $entity2->getField3());
+        $this->assertEquals(null, $dataObject2->getId());
+        $this->assertEquals('x', $dataObject2->getField1());
+        $this->assertEquals('y', $dataObject2->getField2());
+        $this->assertEquals('z', $dataObject2->getField3());
 
-        $this->hydrator->transfer($this->entity1, $entity2);
+        $this->hydrator->transfer($this->dataObject1, $dataObject2);
 
-        $this->assertEquals(null, $entity2->getId());
-        $this->assertEquals('a', $entity2->getField1());
-        $this->assertEquals('b', $entity2->getField2());
-        $this->assertEquals('c', $entity2->getField3());
+        $this->assertEquals(null, $dataObject2->getId());
+        $this->assertEquals('a', $dataObject2->getField1());
+        $this->assertEquals('b', $dataObject2->getField2());
+        $this->assertEquals('c', $dataObject2->getField3());
     }
 
     /**
@@ -100,23 +100,23 @@ class HydratorTest extends \PHPUnit_Framework_TestCase
      */
     public function testTransferOnlySomeProperties()
     {
-        $entity2 = new TestEntity1();
-        $entity2->setField1('x');
-        $entity2->setField2('y');
-        $entity2->setField3('z');
+        $dataObject2 = new TestEntity1();
+        $dataObject2->setField1('x');
+        $dataObject2->setField2('y');
+        $dataObject2->setField3('z');
 
-        $this->assertEquals(null, $entity2->getId());
-        $this->assertEquals('x', $entity2->getField1());
-        $this->assertEquals('y', $entity2->getField2());
-        $this->assertEquals('z', $entity2->getField3());
+        $this->assertEquals(null, $dataObject2->getId());
+        $this->assertEquals('x', $dataObject2->getField1());
+        $this->assertEquals('y', $dataObject2->getField2());
+        $this->assertEquals('z', $dataObject2->getField3());
 
         $whitelistedProperties = array('field1');
 
-        $this->hydrator->transfer($this->entity1, $entity2, $whitelistedProperties);
+        $this->hydrator->transfer($this->dataObject1, $dataObject2, $whitelistedProperties);
 
-        $this->assertEquals(null, $entity2->getId());
-        $this->assertEquals('a', $entity2->getField1());
-        $this->assertEquals('y', $entity2->getField2());
-        $this->assertEquals('z', $entity2->getField3());
+        $this->assertEquals(null, $dataObject2->getId());
+        $this->assertEquals('a', $dataObject2->getField1());
+        $this->assertEquals('y', $dataObject2->getField2());
+        $this->assertEquals('z', $dataObject2->getField3());
     }
 }
