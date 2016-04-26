@@ -41,6 +41,8 @@ trait ProxyTrait
     ) {
         if ($properties == ProxyConstants::SYNC_PROPERTIES_DEFAULT) {
             $properties = $this->syncProperties;
+        } elseif ($properties == ProxyConstants::SYNC_METHODS_NONE) {
+            $properties = array();
         }
 
         if ($syncDirection == ProxyConstants::SYNC_FROM_PROXY) {
