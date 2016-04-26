@@ -76,24 +76,24 @@ Say we have a User entity, and we want to inject a dependency.
             }
         }
 
-3. To propogate data changes from your proxy back to your original entity add  **EntityProxyTrait** to your Proxy class.  
+3. To propogate data changes from your proxy back to your original entity add  **ProxyTrait** to your Proxy class.  
 
 If you omit this trait then the data will be copied when the Proxy is created but all changes to the Proxy afterwards will not affect the Entity.
 
         namespace Gordo\Example;
         
-        use Mindgruve\Gordo\Traits\EntityProxyTrait;;
+        use Mindgruve\Gordo\Traits\ProxyTrait;;
         
         class UserProxy extends User 
         {
-             use EntityProxyTrait;
+             use ProxyTrait;
         }
 
-4. Add an **@EntityProxy** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
+4. Add an **@Proxy** annotation to your entity to map its proxy class.  The target property is the Fully qualified name of your Proxy class.
 
         /**
         * @Entity
-        * @EntityProxy(target="Gordo\Example\UserProxy")
+        * @Proxy(target="Gordo\Example\UserProxy")
         */
         class User {
         }
@@ -146,7 +146,7 @@ If you omit this trait then the data will be copied when the Proxy is created bu
         $userProxy = $userProxyTransformer->transform($user);
 
 ## Data Syncing between Proxy and Entity
-When you add the EntityProxyTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  
+When you add the ProxyTrait, Gordo registers listeners on the setters and getters of properties of your Proxy, and the add/remove methods for relationships of your entities.  
 
 By default, data is synced automatically from the Proxy --> Entity.
 
@@ -162,21 +162,21 @@ There are a couple of annotations that you can put on your entity to configure t
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncMethods={"setUsername"},sync="auto")
+     * @Proxy(target="Gordo\Example\UserProxy",syncMethods={"setUsername"},sync="auto")
      */
 
 **Example:** Sync only the password
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},sync="auto")
+     * @Proxy(target="Gordo\Example\UserProxy",syncProperties={"passwordHash"},sync="auto")
      */
 
 **Example:** Turning off automatic syncing
 
     /**
      * @Entity
-     * @EntityProxy(target="Gordo\Example\UserProxy",sync="auto")
+     * @Proxy(target="Gordo\Example\UserProxy",sync="auto")
      */
 
 

@@ -2,11 +2,11 @@
 
 namespace Mindgruve\Gordo\Tests\Entity;
 
-use Mindgruve\Gordo\Traits\EntityProxyTrait;
+use Mindgruve\Gordo\Traits\ProxyTrait;
 
 class TestProxy3 extends TestEntity3
 {
 
-    use EntityProxyTrait;
+    use ProxyTrait;
 
 }

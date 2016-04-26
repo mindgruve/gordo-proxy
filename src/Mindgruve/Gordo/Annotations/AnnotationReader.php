@@ -57,16 +57,16 @@ class AnnotationReader
     }
 
     /**
-     * Annotations specifically related to Entity Transformation as defined in the EntityProxy class
+     * Annotations specifically related to Entity Transformation as defined in the Proxy class
      *
      * @param $class
-     * @return null | EntityProxy
+     * @return null | Proxy
      */
     public function getProxyAnnotations($class)
     {
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
-            if ($annotation instanceof EntityProxy) {
+            if ($annotation instanceof Proxy) {
                 return $annotation;
             }
         }

@@ -3,7 +3,7 @@
 namespace Mindgruve\Gordo\Tests\Annotations;
 
 use Mindgruve\Gordo\Annotations\AnnotationReader;
-use Mindgruve\Gordo\Annotations\EntityProxy;
+use Mindgruve\Gordo\Annotations\Proxy;
 use Mindgruve\Gordo\Proxy\ProxyConstants;
 use Mockery;
 
@@ -39,7 +39,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $sut = new AnnotationReader($emMock);
         $proxyAnnotation = $sut->getProxyAnnotations('Mindgruve\Gordo\Tests\Entity\TestEntity1');
 
-        $this->assertTrue($proxyAnnotation instanceof EntityProxy);
+        $this->assertTrue($proxyAnnotation instanceof Proxy);
         $this->assertEquals('Mindgruve\Gordo\Tests\Entity\TestProxy1', $proxyAnnotation->target);
         $this->assertEquals(ProxyConstants::SYNC_MANUAL, $proxyAnnotation->sync);
         $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $proxyAnnotation->syncProperties);

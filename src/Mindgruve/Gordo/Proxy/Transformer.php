@@ -60,7 +60,7 @@ class Transformer
 
     /**
      * Transform Entity to a new Object
-     * If the target Object has the EntityProxy trait, then it will also generate a proxy class
+     * If the target Object has the Proxy trait, then it will also generate a proxy class
      *
      * @param $objSrc
      * @return mixed
@@ -94,9 +94,9 @@ class Transformer
                 );
             }
 
-            if (!$this->isEntityProxy($objDest)) {
+            if (!$this->isProxy($objDest)) {
                 throw new \Exception(
-                    'The proxy target class should use the EntityProxy trait.  Proxy Class: ' . $entityProxyClass
+                    'The proxy target class should use the Proxy trait.  Proxy Class: ' . $entityProxyClass
                 );
             }
 
@@ -164,14 +164,14 @@ class Transformer
     }
 
     /**
-     * Checks if the target object has the EntityProxy trait
+     * Checks if the target object has the Proxy trait
      *
      * @param $obj
      * @return bool
      */
-    protected function isEntityProxy($obj)
+    protected function isProxy($obj)
     {
-        if (array_key_exists('Mindgruve\Gordo\Traits\EntityProxyTrait', class_uses($obj))) {
+        if (array_key_exists('Mindgruve\Gordo\Traits\ProxyTrait', class_uses($obj))) {
             return true;
         }
 

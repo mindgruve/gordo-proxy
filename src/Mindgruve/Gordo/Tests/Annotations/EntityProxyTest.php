@@ -1,14 +1,14 @@
 <?php
 
 namespace Mindgruve\Gordo\Tests\Annotations;
-use Mindgruve\Gordo\Annotations\EntityProxy as EntityProxyAnnotation;
+use Mindgruve\Gordo\Annotations\Proxy as ProxyAnnotation;
 
-class EntityProxyTest extends \PHPUnit_Framework_TestCase
+class ProxyTest extends \PHPUnit_Framework_TestCase
 {
 
     public function testGetPublicProperties()
     {
-        $sut = new EntityProxyAnnotation();
+        $sut = new ProxyAnnotation();
         $this->assertClassHasAttribute('target', get_class($sut));
         $this->assertClassHasAttribute('sync', get_class($sut));
         $this->assertClassHasAttribute('syncProperties', get_class($sut));

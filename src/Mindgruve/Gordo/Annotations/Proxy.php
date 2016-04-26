@@ -8,7 +8,7 @@ use Mindgruve\Gordo\Proxy\ProxyConstants;
  * @Annotation
  * @Target("CLASS")
  */
-class EntityProxy
+class Proxy
 {
 
     /**

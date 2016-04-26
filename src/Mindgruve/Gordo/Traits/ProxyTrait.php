@@ -5,7 +5,7 @@ namespace Mindgruve\Gordo\Traits;
 use Mindgruve\Gordo\Proxy\Hydrator;
 use Mindgruve\Gordo\Proxy\ProxyConstants;
 
-trait EntityProxyTrait
+trait ProxyTrait
 {
     protected $entity;
 
