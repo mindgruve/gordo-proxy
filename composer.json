@@ -1,11 +1,11 @@
 {
   "name": "mindgruve/gordo-proxy",
-  "description": "Extend your doctrine proxies with Poncho",
+  "description": "Extend your doctrine proxies with GordoProxy",
   "license": "MIT",
   "authors": [
     {
       "name": "Kevin",
-      "email": "simpkevin@gmail.com"
+      "email": "ksimpson@mindgruve.com"
     }
   ],
   "require": {
