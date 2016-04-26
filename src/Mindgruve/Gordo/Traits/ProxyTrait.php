@@ -32,16 +32,16 @@ trait ProxyTrait
      * If $syncDirection ==  ProxyConstants::SYNC_FROM_PROXY    proxy --> entity
      * If $syncDirection ==  ProxyConstants::SYNC_FROM_ENTITY   entity --> proxy
      *
-     * @param $properties
      * @param $syncDirection
+     * @param $properties
      */
     public function syncEntity(
-        $properties = ProxyConstants::SYNC_PROPERTIES_DEFAULT,
-        $syncDirection = ProxyConstants::SYNC_FROM_PROXY
+        $syncDirection = ProxyConstants::SYNC_FROM_PROXY,
+        $properties = ProxyConstants::SYNC_PROPERTIES_DEFAULT
     ) {
         if ($properties == ProxyConstants::SYNC_PROPERTIES_DEFAULT) {
             $properties = $this->syncProperties;
-        } elseif ($properties == ProxyConstants::SYNC_METHODS_NONE) {
+        } elseif ($properties == ProxyConstants::SYNC_PROPERTIES_NONE) {
             $properties = array();
         }
 

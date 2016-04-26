@@ -4,6 +4,7 @@ namespace Mindgruve\Gordo\Tests\Proxy;
 
 use Mindgruve\Gordo\Proxy\Hydrator;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
+use Mindgruve\Gordo\Proxy\ProxyConstants;
 use Mindgruve\Gordo\Proxy\ProxyManager;
 use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 use Mindgruve\Gordo\Tests\Entity\TestEntity2;
@@ -113,21 +114,53 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity1);
 
-        $proxy1->setField1('x');
-        $proxy1->setField2('y');
-        $proxy1->setField3('z');
+        $this->setup();
+        $proxy2 = $sut->transform($this->entity1);
 
+        // Modify Proxy
+        $proxy2->setField1('x');
+        $proxy2->setField2('y');
+        $proxy2->setField3('z');
+
+        // Entity should be unchanged
         $this->assertEquals('a', $this->entity1->getField1());
         $this->assertEquals('b', $this->entity1->getField2());
         $this->assertEquals('c', $this->entity1->getField3());
 
-        $proxy1->syncEntity();
+        // Manually sync to entity
+        $proxy2->syncEntity();
 
+        // Confirm properties updated
         $this->assertEquals('x', $this->entity1->getField1());
         $this->assertEquals('y', $this->entity1->getField2());
         $this->assertEquals('z', $this->entity1->getField3());
+
+        // Now test the reverse... update entity
+        $this->entity1->setField1('1');
+        $this->entity1->setField2('2');
+        $this->entity1->setField3('3');
+
+        // Proxy unchanged
+        $this->assertEquals('x', $proxy2->getField1());
+        $this->assertEquals('y', $proxy2->getField2());
+        $this->assertEquals('z', $proxy2->getField3());
+
+        // SYNC_PROPERTIES_NONE should have no impact
+        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_NONE);
+
+        // Confirm properties changed
+        $this->assertEquals('x', $proxy2->getField1());
+        $this->assertEquals('y', $proxy2->getField2());
+        $this->assertEquals('z', $proxy2->getField3());
+
+        // Pull in changes from Entity
+        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+
+        // Confirm changes on proxy
+        $this->assertEquals('1', $proxy2->getField1());
+        $this->assertEquals('2', $proxy2->getField2());
+        $this->assertEquals('3', $proxy2->getField3());
     }
 
     public function testTransformSyncedEntity2()
@@ -138,21 +171,35 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity2);
+        $proxy2 = $sut->transform($this->entity2);
 
-        $proxy1->setField1('x');
-        $proxy1->setField2('y');
-        $proxy1->setField3('z');
+        // Modify Proxy
+        $proxy2->setField1('x');
+        $proxy2->setField2('y');
+        $proxy2->setField3('z');
 
+        // Confirm changes on underlying entity
         $this->assertEquals('x', $this->entity2->getField1());
         $this->assertEquals('y', $this->entity2->getField2());
         $this->assertEquals('z', $this->entity2->getField3());
 
-        $proxy1->syncEntity();
+        // Now test the reverse... update entity
+        $this->entity2->setField1('1');
+        $this->entity2->setField2('2');
+        $this->entity2->setField3('3');
 
-        $this->assertEquals('x', $this->entity2->getField1());
-        $this->assertEquals('y', $this->entity2->getField2());
-        $this->assertEquals('z', $this->entity2->getField3());
+        // Confirm values on proxy unchanged
+        $this->assertEquals('x', $proxy2->getField1());
+        $this->assertEquals('y', $proxy2->getField2());
+        $this->assertEquals('z', $proxy2->getField3());
+
+        // Pull changes up from underlying entity
+        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+
+        // Confirm changes
+        $this->assertEquals('1', $proxy2->getField1());
+        $this->assertEquals('2', $proxy2->getField2());
+        $this->assertEquals('3', $proxy2->getField3());
     }
 
     public function testTransformSyncEntity3()
@@ -163,24 +210,46 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity3);
+        $proxy3 = $sut->transform($this->entity3);
 
-        $proxy1->setField1('x');
-        $proxy1->setField2('y');
-        $proxy1->setField3('z');
+        // Modify Proxy
+        $proxy3->setField1('x');
+        $proxy3->setField2('y');
+        $proxy3->setField3('z');
 
+        // Confirm changes on underlying entity
         $this->assertEquals('x', $this->entity3->getField1());
         $this->assertEquals('b', $this->entity3->getField2());
         $this->assertEquals('c', $this->entity3->getField3());
 
-        $proxy1->syncEntity();
+        // Now test the reverse... update entity
+        $this->entity3->setField1('1');
+        $this->entity3->setField2('2');
+        $this->entity3->setField3('3');
 
-        $this->assertEquals('x', $this->entity3->getField1());
-        $this->assertEquals('b', $this->entity3->getField2());
-        $this->assertEquals('c', $this->entity3->getField3());
+        // Confirm proxy not changed
+        $this->assertEquals('x', $proxy3->getField1());
+        $this->assertEquals('y', $proxy3->getField2());
+        $this->assertEquals('z', $proxy3->getField3());
+
+        // Pull up changes from entity
+        $proxy3->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+
+        // Confirm Changes
+        $this->assertEquals('1', $proxy3->getField1());
+        $this->assertEquals('y', $proxy3->getField2());
+        $this->assertEquals('z', $proxy3->getField3());
+
+        // Pull All Properties
+        $proxy3->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_ALL);
+
+        // Confirm Changes
+        $this->assertEquals('1', $proxy3->getField1());
+        $this->assertEquals('2', $proxy3->getField2());
+        $this->assertEquals('3', $proxy3->getField3());
     }
 
-    public function testTransformSelectedProperties()
+    public function testTransformSyncEntity4()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
@@ -188,46 +257,50 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity3);
-        $proxy1->setField1('x');
-        $proxy1->setField2('y');
-        $proxy1->setField3('z');
+        $proxy4 = $sut->transform($this->entity4);
 
-        $this->assertEquals('x', $this->entity3->getField1());
-        $this->assertEquals('b', $this->entity3->getField2());
-        $this->assertEquals('c', $this->entity3->getField3());
-        $this->assertEquals('x', $proxy1->getField1());
-        $this->assertEquals('y', $proxy1->getField2());
-        $this->assertEquals('z', $proxy1->getField3());
-    }
+        // Modify Proxy
+        $proxy4->setField1('x');
+        $proxy4->setField2('y');
+        $proxy4->setField3('z');
 
-    public function testTransformSelectedProperties4()
-    {
-        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
-        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
-        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
-
-        $sut = new ProxyManager($emMock);
-        $proxy1 = $sut->transform($this->entity4);
-        $proxy1->setField1('x');
-        $proxy1->setField2('y');
-        $proxy1->setField3('z');
-
+        // Confirm entity unchanged
         $this->assertEquals('a', $this->entity4->getField1());
         $this->assertEquals('b', $this->entity4->getField2());
         $this->assertEquals('c', $this->entity4->getField3());
-        $this->assertEquals('x', $proxy1->getField1());
-        $this->assertEquals('y', $proxy1->getField2());
-        $this->assertEquals('z', $proxy1->getField3());
 
-        $proxy1->syncEntity();
+        // Sync down changes
+        $proxy4->syncEntity();
 
+        // Confirm entity updated
         $this->assertEquals('x', $this->entity4->getField1());
         $this->assertEquals('b', $this->entity4->getField2());
         $this->assertEquals('c', $this->entity4->getField3());
-        $this->assertEquals('x', $proxy1->getField1());
-        $this->assertEquals('y', $proxy1->getField2());
-        $this->assertEquals('z', $proxy1->getField3());
+
+        // Now test the reverse... update entity
+        $this->entity4->setField1('1');
+        $this->entity4->setField2('2');
+        $this->entity4->setField3('3');
+
+        // confirm no changes
+        $this->assertEquals('x', $proxy4->getField1());
+        $this->assertEquals('y', $proxy4->getField2());
+        $this->assertEquals('z', $proxy4->getField3());
+
+        // pull data from entity
+        $proxy4->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+
+        // confirm changes
+        $this->assertEquals('1', $proxy4->getField1());
+        $this->assertEquals('y', $proxy4->getField2());
+        $this->assertEquals('z', $proxy4->getField3());
+
+        // pull all properties
+        $proxy4->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_ALL);
+
+        // confirm changes
+        $this->assertEquals('1', $proxy4->getField1());
+        $this->assertEquals('2', $proxy4->getField2());
+        $this->assertEquals('3', $proxy4->getField3());
     }
 }

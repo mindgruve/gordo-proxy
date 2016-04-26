@@ -142,6 +142,7 @@ class Transformer
                         $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
                         $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
                         $syncedListeners[] = Inflector::camelize('set_' . $associationKeyPlural);
+                        $syncedListeners[] = Inflector::camelize('set_' . $associationKey);
                     }
                 }
 
