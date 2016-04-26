@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Tests\Entity;
 
 /**
  * @Entity
- * @Proxy(target="Mindgruve\Gordo\Tests\Entity\TestProxy4",sync="manual",syncProperties={"field1"},syncMethods={"setField1"})
+ * @Proxy(target="Mindgruve\Gordo\Tests\Entity\TestProxy4",syncMethods={"setField1"},syncProperties={"field1"})
  */
 class TestEntity4
 {

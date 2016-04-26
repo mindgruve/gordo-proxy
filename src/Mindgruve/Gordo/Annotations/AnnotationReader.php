@@ -41,7 +41,7 @@ class AnnotationReader
 
         $this->em = $em;
 
-        if(!$reader){
+        if (!$reader) {
             $reader = new SimpleAnnotationReader();
         }
 
@@ -97,10 +97,11 @@ class AnnotationReader
      * @param $class
      * @return array|null
      */
-    public function getProxySyncedProperties($class){
+    public function getProxySyncedProperties($class)
+    {
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
-            if($annotations->syncProperties == array('*')){
+            if ($annotations->syncProperties == array('*')) {
                 return ProxyConstants::SYNC_PROPERTIES_ALL;
             }
 
@@ -111,33 +112,20 @@ class AnnotationReader
     }
 
     /**
-     * Enable/Disable automatic syncing when methods are called on the class
-     *
-     * @param $class
-     * @return bool
-     */
-    public function getProxySync($class){
-        $annotations = $this->getProxyAnnotations($class);
-        if ($annotations) {
-            return $annotations->sync;
-        }
-
-        return ProxyConstants::SYNC_MANUAL;
-    }
-
-    /**
      * Methods that will call the dataSync() method
      * An empty array is interpreted as all methods
      *
      * @param $class
      * @return array|null
      */
-    public function getProxySyncMethods($class){
+    public function getProxySyncMethods($class)
+    {
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
-            if($annotations->syncMethods == array('*')){
+            if ($annotations->syncMethods == array('*')) {
                 return ProxyConstants::SYNC_METHODS_ALL;
             }
+
             return $annotations->syncMethods;
         }
 

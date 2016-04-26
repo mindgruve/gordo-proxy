@@ -127,34 +127,32 @@ class Transformer
             $factory = new Factory();
             $proxy = $factory->createProxy($objDest, array());
 
-            $sync = $this->annotationReader->getProxySync($this->class);
-            if ($sync == ProxyConstants::SYNC_AUTOMATIC) {
 
-                $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
-                if ($syncMethods == ProxyConstants::SYNC_METHODS_ALL) {
-                    $syncMethods = array();
-                    foreach (array_keys($objSrcData) as $property) {
-                        $syncMethods[] = Inflector::camelize('set_' . $property);
-                    }
-                    foreach ($associations as $associationKey => $association) {
-                        $associationKey = Inflector::singularize($associationKey);
-                        $associationKeyPlural = Inflector::pluralize($associationKey);
-                        $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
-                        $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
-                        $syncedListeners[] = Inflector::camelize('set_' . $associationKeyPlural);
-                        $syncedListeners[] = Inflector::camelize('set_' . $associationKey);
-                    }
+            $syncMethods = $this->annotationReader->getProxySyncMethods($this->class);
+            if ($syncMethods == ProxyConstants::SYNC_METHODS_ALL) {
+                $syncMethods = array();
+                foreach (array_keys($objSrcData) as $property) {
+                    $syncMethods[] = Inflector::camelize('set_' . $property);
                 }
-
-                foreach ($syncMethods as $syncMethod) {
-                    $proxy->setMethodSuffixInterceptor(
-                        $syncMethod,
-                        function ($proxy, $instance) {
-                            $instance->syncData();
-                        }
-                    );
+                foreach ($associations as $associationKey => $association) {
+                    $associationKey = Inflector::singularize($associationKey);
+                    $associationKeyPlural = Inflector::pluralize($associationKey);
+                    $syncedListeners[] = Inflector::camelize('add_' . $associationKey);
+                    $syncedListeners[] = Inflector::camelize('remove_' . $associationKey);
+                    $syncedListeners[] = Inflector::camelize('set_' . $associationKeyPlural);
+                    $syncedListeners[] = Inflector::camelize('set_' . $associationKey);
                 }
+            } elseif ($syncMethods == ProxyConstants::SYNC_METHODS_NONE) {
+                $syncMethods = array();
+            }
 
+            foreach ($syncMethods as $syncMethod) {
+                $proxy->setMethodSuffixInterceptor(
+                    $syncMethod,
+                    function ($proxy, $instance) {
+                        $instance->syncData();
+                    }
+                );
             }
 
             return $proxy;

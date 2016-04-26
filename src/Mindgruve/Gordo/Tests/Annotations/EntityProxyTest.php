@@ -10,7 +10,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     {
         $sut = new ProxyAnnotation();
         $this->assertClassHasAttribute('target', get_class($sut));
-        $this->assertClassHasAttribute('sync', get_class($sut));
         $this->assertClassHasAttribute('syncProperties', get_class($sut));
         $this->assertClassHasAttribute('syncMethods', get_class($sut));
     }

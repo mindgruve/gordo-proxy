@@ -260,7 +260,6 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $proxy4 = $sut->transform($this->dataObject4);
 
         // Modify Proxy
-        $proxy4->setField1('x');
         $proxy4->setField2('y');
         $proxy4->setField3('z');
 
@@ -273,7 +272,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $proxy4->syncData();
 
         // Confirm data object updated
-        $this->assertEquals('x', $this->dataObject4->getField1());
+        $this->assertEquals('a', $this->dataObject4->getField1());
         $this->assertEquals('b', $this->dataObject4->getField2());
         $this->assertEquals('c', $this->dataObject4->getField3());
 
@@ -283,7 +282,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->dataObject4->setField3('3');
 
         // confirm no changes
-        $this->assertEquals('x', $proxy4->getField1());
+        $this->assertEquals('a', $proxy4->getField1());
         $this->assertEquals('y', $proxy4->getField2());
         $this->assertEquals('z', $proxy4->getField3());
 
