@@ -116,7 +116,7 @@ class AnnotationReader
      * @param $class
      * @return bool
      */
-    public function getProxySyncAuto($class){
+    public function getProxySync($class){
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->sync;
