@@ -42,8 +42,8 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($proxyAnnotation instanceof EntityProxy);
         $this->assertEquals('Mindgruve\Gordo\Tests\Entity\TestProxy1', $proxyAnnotation->target);
         $this->assertEquals(false, $proxyAnnotation->syncAuto);
-        $this->assertEquals(ProxyConstants::SYNC_ALL_PROPERTIES, $proxyAnnotation->syncProperties);
-        $this->assertEquals(ProxyConstants::SYNC_ALL_LISTENERS, $proxyAnnotation->syncListeners);
+        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $proxyAnnotation->syncProperties);
+        $this->assertEquals(ProxyConstants::SYNC_LISTENERS_ALL, $proxyAnnotation->syncListeners);
     }
 
     public function testGetTargetClass()
@@ -61,7 +61,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncedProperties('Mindgruve\Gordo\Tests\Entity\TestEntity1');
-        $this->assertEquals(ProxyConstants::SYNC_ALL_PROPERTIES, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $properties);
     }
 
     public function testGetProxySyncProperties2()
@@ -70,7 +70,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncedProperties('Mindgruve\Gordo\Tests\Entity\TestEntity2');
-        $this->assertEquals(ProxyConstants::SYNC_ALL_PROPERTIES, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $properties);
     }
 
     public function testGetProxySyncProperties3()
@@ -124,7 +124,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncListeners('Mindgruve\Gordo\Tests\Entity\TestEntity1');
-        $this->assertEquals(ProxyConstants::SYNC_ALL_LISTENERS, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_LISTENERS_ALL, $properties);
     }
 
     public function testGetProxySyncListeners2()
@@ -133,7 +133,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncListeners('Mindgruve\Gordo\Tests\Entity\TestEntity2');
-        $this->assertEquals(ProxyConstants::SYNC_ALL_LISTENERS, $properties);
+        $this->assertEquals(ProxyConstants::SYNC_LISTENERS_ALL, $properties);
     }
 
     public function testGetProxySyncListeners3()

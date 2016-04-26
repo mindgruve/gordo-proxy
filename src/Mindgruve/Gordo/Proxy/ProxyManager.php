@@ -65,7 +65,13 @@ class ProxyManager
      * @param Transformer $transformer
      * @return mixed
      */
-    public function transform($object, Hydrator $hydrator = null, Transformer $transformer = null)
+    public function transform($object,
+        $syncAuto = null,
+        $syncProperties = null,
+        $syncListeners = null,
+        Hydrator $hydrator = null,
+        Transformer $transformer = null
+    )
     {
         $class = get_class($object);
 

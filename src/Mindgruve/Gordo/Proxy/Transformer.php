@@ -115,7 +115,7 @@ class Transformer
 
 
             $syncProperties = $this->annotationReader->getProxySyncedProperties($this->class);
-            if ($syncProperties == ProxyConstants::SYNC_ALL_PROPERTIES) {
+            if ($syncProperties == ProxyConstants::SYNC_PROPERTIES_ALL) {
                 $syncProperties = array_keys($objSrcData);
             }
 
@@ -131,7 +131,7 @@ class Transformer
             if ($syncAuto) {
 
                 $syncedListeners = $this->annotationReader->getProxySyncListeners($this->class);
-                if ($syncedListeners == ProxyConstants::SYNC_ALL_LISTENERS) {
+                if ($syncedListeners == ProxyConstants::SYNC_LISTENERS_ALL) {
                     $syncedListeners = array();
                     foreach (array_keys($objSrcData) as $property) {
                         $syncedListeners[] = Inflector::camelize('set_' . $property);

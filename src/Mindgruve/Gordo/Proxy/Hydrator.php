@@ -59,17 +59,17 @@ class Hydrator
      * @return object
      * @throws \Exception
      */
-    public function transfer($objSrc, $objDest, $properties = ProxyConstants::SYNC_ALL_PROPERTIES)
+    public function transfer($objSrc, $objDest, $properties = ProxyConstants::SYNC_PROPERTIES_ALL)
     {
         $srcData = $this->extract($objSrc);
         $destData = $this->extract($objDest);
 
-        if($properties == ProxyConstants::SYNC_ALL_PROPERTIES){
+        if($properties == ProxyConstants::SYNC_PROPERTIES_ALL){
             $properties = array_keys($srcData);
         }
 
         if(!is_array($properties)){
-            throw new \Exception('Properties should be either ProxyConstants::SYNC_ALL_PROPERTIES or an array');
+            throw new \Exception('Properties should be either ProxyConstants::SYNC_PROPERTIES_ALL or an array');
         }
 
         $newValues = $destData;

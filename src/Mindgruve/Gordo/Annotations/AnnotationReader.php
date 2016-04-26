@@ -101,7 +101,7 @@ class AnnotationReader
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             if($annotations->syncProperties == array('*')){
-                return ProxyConstants::SYNC_ALL_PROPERTIES;
+                return ProxyConstants::SYNC_PROPERTIES_ALL;
             }
 
             return $annotations->syncProperties;
@@ -136,7 +136,7 @@ class AnnotationReader
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             if($annotations->syncListeners == array('*')){
-                return ProxyConstants::SYNC_ALL_LISTENERS;
+                return ProxyConstants::SYNC_LISTENERS_ALL;
             }
             return $annotations->syncListeners;
         }

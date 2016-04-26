@@ -24,10 +24,10 @@ class EntityProxy
     /**
      * @var array
      */
-    public $syncProperties = ProxyConstants::SYNC_ALL_PROPERTIES;
+    public $syncProperties = ProxyConstants::SYNC_PROPERTIES_ALL;
 
     /**
      * @var array
      */
-    public $syncListeners = ProxyConstants::SYNC_ALL_LISTENERS;
+    public $syncListeners = ProxyConstants::SYNC_LISTENERS_ALL;
 }
