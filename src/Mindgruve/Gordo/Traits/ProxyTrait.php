@@ -2,8 +2,8 @@
 
 namespace Mindgruve\Gordo\Traits;
 
-use Mindgruve\Gordo\Proxy\Hydrator;
-use Mindgruve\Gordo\Proxy\ProxyConstants;
+use Mindgruve\Gordo\Proxy\Constants;
+use Mindgruve\Gordo\Proxy\Transformer;
 
 trait ProxyTrait
 {
@@ -15,9 +15,9 @@ trait ProxyTrait
     protected $syncProperties = array();
 
     /**
-     * @var Hydrator
+     * @var Transformer
      */
-    protected $hydrator;
+    protected $transformer;
 
     /**
      * @return object
@@ -29,26 +29,26 @@ trait ProxyTrait
 
     /**
      * Sync the fields
-     * If $syncDirection ==  ProxyConstants::UPDATE_DATA_OBJECT     proxy --> data object
-     * If $syncDirection ==  ProxyConstants::UPDATE_PROXY           data object --> proxy
+     * If $syncDirection ==  Constants::UPDATE_DATA_OBJECT     proxy --> data object
+     * If $syncDirection ==  Constants::UPDATE_PROXY           data object --> proxy
      *
      * @param $syncDirection
      * @param $properties
      */
     public function syncData(
-        $syncDirection = ProxyConstants::UPDATE_DATA_OBJECT,
-        $properties = ProxyConstants::SYNC_PROPERTIES_DEFAULT
+        $syncDirection = Constants::UPDATE_DATA_OBJECT,
+        $properties = Constants::SYNC_PROPERTIES_DEFAULT
     ) {
-        if ($properties == ProxyConstants::SYNC_PROPERTIES_DEFAULT) {
+        if ($properties == Constants::SYNC_PROPERTIES_DEFAULT) {
             $properties = $this->syncProperties;
-        } elseif ($properties == ProxyConstants::SYNC_PROPERTIES_NONE) {
+        } elseif ($properties == Constants::SYNC_PROPERTIES_NONE) {
             $properties = array();
         }
 
-        if ($syncDirection == ProxyConstants::UPDATE_DATA_OBJECT) {
-            $this->hydrator->transfer($this, $this->dataObject, $properties);
-        } elseif ($syncDirection == ProxyConstants::UPDATE_PROXY) {
-            $this->hydrator->transfer($this->dataObject, $this, $properties);
+        if ($syncDirection == Constants::UPDATE_DATA_OBJECT) {
+            $this->transformer->transfer($this, $this->dataObject, $properties);
+        } elseif ($syncDirection == Constants::UPDATE_PROXY) {
+            $this->transformer->transfer($this->dataObject, $this, $properties);
         }
     }
 }

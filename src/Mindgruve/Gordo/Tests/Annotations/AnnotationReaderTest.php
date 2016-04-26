@@ -4,7 +4,7 @@ namespace Mindgruve\Gordo\Tests\Annotations;
 
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Mindgruve\Gordo\Annotations\Proxy;
-use Mindgruve\Gordo\Proxy\ProxyConstants;
+use Mindgruve\Gordo\Proxy\Constants;
 use Mockery;
 
 class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
@@ -41,8 +41,8 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($proxyAnnotation instanceof Proxy);
         $this->assertEquals('Mindgruve\Gordo\Tests\Entity\TestProxy1', $proxyAnnotation->target);
-        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $proxyAnnotation->syncProperties);
-        $this->assertEquals(ProxyConstants::SYNC_METHODS_NONE, $proxyAnnotation->syncMethods);
+        $this->assertEquals(Constants::SYNC_PROPERTIES_ALL, $proxyAnnotation->syncProperties);
+        $this->assertEquals(Constants::SYNC_METHODS_NONE, $proxyAnnotation->syncMethods);
     }
 
     public function testGetTargetClass()
@@ -60,7 +60,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncedProperties('Mindgruve\Gordo\Tests\Entity\TestEntity1');
-        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $properties);
+        $this->assertEquals(Constants::SYNC_PROPERTIES_ALL, $properties);
     }
 
     public function testGetProxySyncProperties2()
@@ -69,7 +69,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncedProperties('Mindgruve\Gordo\Tests\Entity\TestEntity2');
-        $this->assertEquals(ProxyConstants::SYNC_PROPERTIES_ALL, $properties);
+        $this->assertEquals(Constants::SYNC_PROPERTIES_ALL, $properties);
     }
 
     public function testGetProxySyncProperties3()
@@ -87,7 +87,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncMethods('Mindgruve\Gordo\Tests\Entity\TestEntity1');
-        $this->assertEquals(ProxyConstants::SYNC_METHODS_NONE, $properties);
+        $this->assertEquals(Constants::SYNC_METHODS_NONE, $properties);
     }
 
     public function testGetProxySyncMethods2()
@@ -96,7 +96,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncMethods('Mindgruve\Gordo\Tests\Entity\TestEntity2');
-        $this->assertEquals(ProxyConstants::SYNC_METHODS_ALL, $properties);
+        $this->assertEquals(Constants::SYNC_METHODS_ALL, $properties);
     }
 
     public function testGetProxySyncMethods3()
@@ -105,7 +105,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
 
         $sut = new AnnotationReader($emMock);
         $properties = $sut->getProxySyncMethods('Mindgruve\Gordo\Tests\Entity\TestEntity3');
-        $this->assertEquals(ProxyConstants::SYNC_METHODS_ALL, $properties);
+        $this->assertEquals(Constants::SYNC_METHODS_ALL, $properties);
     }
 
     public function testGetProxySyncMethods4()

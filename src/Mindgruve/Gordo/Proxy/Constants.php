@@ -2,7 +2,7 @@
 
 namespace Mindgruve\Gordo\Proxy;
 
-class ProxyConstants
+class Constants
 {
 
     const UPDATE_DATA_OBJECT = 'update-data-object';

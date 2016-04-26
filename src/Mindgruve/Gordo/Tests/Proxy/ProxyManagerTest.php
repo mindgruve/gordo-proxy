@@ -3,9 +3,8 @@
 namespace Mindgruve\Gordo\Tests\Proxy;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Mindgruve\Gordo\Proxy\Hydrator;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
-use Mindgruve\Gordo\Proxy\ProxyConstants;
+use Mindgruve\Gordo\Proxy\Constants;
 use Mindgruve\Gordo\Proxy\ProxyManager;
 use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 use Mindgruve\Gordo\Tests\Entity\TestEntity2;
@@ -20,10 +19,6 @@ use Mockery;
 class ProxyManagerTest extends \PHPUnit_Framework_TestCase
 {
 
-    /**
-     * @var Hydrator
-     */
-    protected $hydrator;
 
     /**
      * @var TestEntity1
@@ -74,8 +69,6 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $dataObject4->setField3('c');
         $this->dataObject4 = $dataObject4;
 
-        $hydrator = new Hydrator(get_class($dataObject1));
-        $this->hydrator = $hydrator;
     }
 
     public function testConstructor()
@@ -151,7 +144,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // SYNC_PROPERTIES_NONE should have no impact
-        $proxy2->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_NONE);
+        $proxy2->syncData(Constants::UPDATE_PROXY, Constants::SYNC_PROPERTIES_NONE);
 
         // Confirm properties changed
         $this->assertEquals('x', $proxy2->getField1());
@@ -159,7 +152,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // Pull in changes from data object
-        $proxy2->syncData(ProxyConstants::UPDATE_PROXY);
+        $proxy2->syncData(Constants::UPDATE_PROXY);
 
         // Confirm changes on proxy
         $this->assertEquals('1', $proxy2->getField1());
@@ -198,7 +191,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // Pull changes up from underlying data object
-        $proxy2->syncData(ProxyConstants::UPDATE_PROXY);
+        $proxy2->syncData(Constants::UPDATE_PROXY);
 
         // Confirm changes
         $this->assertEquals('1', $proxy2->getField1());
@@ -237,7 +230,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy3->getField3());
 
         // Pull up changes from data object
-        $proxy3->syncData(ProxyConstants::UPDATE_PROXY);
+        $proxy3->syncData(Constants::UPDATE_PROXY);
 
         // Confirm Changes
         $this->assertEquals('1', $proxy3->getField1());
@@ -245,7 +238,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy3->getField3());
 
         // Pull All Properties
-        $proxy3->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_ALL);
+        $proxy3->syncData(Constants::UPDATE_PROXY, Constants::SYNC_PROPERTIES_ALL);
 
         // Confirm Changes
         $this->assertEquals('1', $proxy3->getField1());
@@ -291,7 +284,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy4->getField3());
 
         // pull data from data object
-        $proxy4->syncData(ProxyConstants::UPDATE_PROXY);
+        $proxy4->syncData(Constants::UPDATE_PROXY);
 
         // confirm changes
         $this->assertEquals('1', $proxy4->getField1());
@@ -299,7 +292,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy4->getField3());
 
         // pull all properties
-        $proxy4->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_ALL);
+        $proxy4->syncData(Constants::UPDATE_PROXY, Constants::SYNC_PROPERTIES_ALL);
 
         // confirm changes
         $this->assertEquals('1', $proxy4->getField1());
