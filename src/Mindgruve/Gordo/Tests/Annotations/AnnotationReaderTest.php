@@ -82,7 +82,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('field1'), $properties);
     }
 
-    public function testGetProxySyncAuto1()
+    public function testGetProxySync1()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -91,7 +91,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_MANUAL, $properties);
     }
 
-    public function testGetProxySyncAuto2()
+    public function testGetProxySync2()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -100,7 +100,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_AUTOMATIC, $properties);
     }
 
-    public function testGetProxySyncAuto3()
+    public function testGetProxySync3()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -109,7 +109,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_AUTOMATIC, $properties);
     }
 
-    public function testGetProxySyncAuto4()
+    public function testGetProxySync4()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -118,7 +118,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_MANUAL, $properties);
     }
 
-    public function testGetProxySyncListeners1()
+    public function testGetProxySyncMethods1()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -127,7 +127,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_METHODS_ALL, $properties);
     }
 
-    public function testGetProxySyncListeners2()
+    public function testGetProxySyncMethods2()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -136,7 +136,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(ProxyConstants::SYNC_METHODS_ALL, $properties);
     }
 
-    public function testGetProxySyncListeners3()
+    public function testGetProxySyncMethods3()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
@@ -145,7 +145,7 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('setField1'), $properties);
     }
 
-    public function testGetProxySyncListeners4()
+    public function testGetProxySyncMethods4()
     {
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
 
