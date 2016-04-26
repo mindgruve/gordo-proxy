@@ -7,7 +7,7 @@ use Mindgruve\Gordo\Proxy\ProxyConstants;
 
 trait ProxyTrait
 {
-    protected $entity;
+    protected $dataObject;
 
     /**
      * @var array
@@ -22,21 +22,21 @@ trait ProxyTrait
     /**
      * @return object
      */
-    protected function getEntity()
+    protected function getDataObject()
     {
-        return $this->entity;
+        return $this->dataObject;
     }
 
     /**
      * Sync the fields
-     * If $syncDirection ==  ProxyConstants::SYNC_FROM_PROXY    proxy --> entity
-     * If $syncDirection ==  ProxyConstants::SYNC_FROM_ENTITY   entity --> proxy
+     * If $syncDirection ==  ProxyConstants::UPDATE_ENTITY    proxy --> entity
+     * If $syncDirection ==  ProxyConstants::UPDATE_PROXY   entity --> proxy
      *
      * @param $syncDirection
      * @param $properties
      */
-    public function syncEntity(
-        $syncDirection = ProxyConstants::SYNC_FROM_PROXY,
+    public function syncData(
+        $syncDirection = ProxyConstants::UPDATE_ENTITY,
         $properties = ProxyConstants::SYNC_PROPERTIES_DEFAULT
     ) {
         if ($properties == ProxyConstants::SYNC_PROPERTIES_DEFAULT) {
@@ -45,10 +45,10 @@ trait ProxyTrait
             $properties = array();
         }
 
-        if ($syncDirection == ProxyConstants::SYNC_FROM_PROXY) {
-            $this->hydrator->transfer($this, $this->entity, $properties);
-        } elseif ($syncDirection == ProxyConstants::SYNC_FROM_ENTITY) {
-            $this->hydrator->transfer($this->entity, $this, $properties);
+        if ($syncDirection == ProxyConstants::UPDATE_ENTITY) {
+            $this->hydrator->transfer($this, $this->dataObject, $properties);
+        } elseif ($syncDirection == ProxyConstants::UPDATE_PROXY) {
+            $this->hydrator->transfer($this->dataObject, $this, $properties);
         }
     }
 }

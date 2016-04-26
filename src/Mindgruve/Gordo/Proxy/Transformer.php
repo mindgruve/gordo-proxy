@@ -69,11 +69,11 @@ class Transformer
     public function transform($objSrc)
     {
         $objSrcData = $this->hydrator->extract($objSrc);
-        $entityProxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
+        $proxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
 
-        if ($entityProxyClass != $this->class) {
+        if ($proxyClass != $this->class) {
 
-            $entityAnnotations = $this->annotationReader->getEntityAnnotations($this->class);
+            $entityAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
             $associations = $entityAnnotations->getAssociationMappings();
 
             foreach ($associations as $key => $association) {
@@ -86,24 +86,24 @@ class Transformer
                     $objSrcData[$key] = new ArrayCollection($items);
                 }
             }
-            $objDest = $this->proxyManager->instantiate($entityProxyClass);
+            $objDest = $this->proxyManager->instantiate($proxyClass);
 
             if (!$objDest instanceof $objSrc) {
                 throw new \Exception(
-                    'The proxy target class should extend the underlying entity.  Proxy Class: ' . $entityProxyClass
+                    'The proxy target class should extend the underlying entity.  Proxy Class: ' . $proxyClass
                 );
             }
 
             if (!$this->isProxy($objDest)) {
                 throw new \Exception(
-                    'The proxy target class should use the Proxy trait.  Proxy Class: ' . $entityProxyClass
+                    'The proxy target class should use the Proxy trait.  Proxy Class: ' . $proxyClass
                 );
             }
 
             $this->hydrator->hydrate($objSrcData, $objDest);
             $reflectionClass = new \ReflectionClass($objDest);
 
-            $reflectionProperty = $reflectionClass->getProperty('entity');
+            $reflectionProperty = $reflectionClass->getProperty('dataObject');
             $reflectionProperty->setAccessible(true);
             $reflectionProperty->setValue($objDest, $objSrc);
             $reflectionProperty->setAccessible(false);
@@ -150,7 +150,7 @@ class Transformer
                     $proxy->setMethodSuffixInterceptor(
                         $syncMethod,
                         function ($proxy, $instance) {
-                            $instance->syncEntity();
+                            $instance->syncData();
                         }
                     );
                 }

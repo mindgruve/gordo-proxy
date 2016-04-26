@@ -5,8 +5,8 @@ namespace Mindgruve\Gordo\Proxy;
 class ProxyConstants
 {
 
-    const SYNC_FROM_PROXY = 1;
-    const SYNC_FROM_ENTITY = 2;
+    const UPDATE_ENTITY = 1;
+    const UPDATE_PROXY = 2;
 
     const SYNC_PROPERTIES_ALL = 3;
     const SYNC_METHODS_ALL = 4;
@@ -19,8 +19,5 @@ class ProxyConstants
 
     const SYNC_AUTOMATIC = 'auto';
     const SYNC_MANUAL = 'manual';
-
-
-
 
 }

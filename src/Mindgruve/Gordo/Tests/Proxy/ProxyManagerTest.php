@@ -129,7 +129,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $this->entity1->getField3());
 
         // Manually sync to entity
-        $proxy2->syncEntity();
+        $proxy2->syncData();
 
         // Confirm properties updated
         $this->assertEquals('x', $this->entity1->getField1());
@@ -147,7 +147,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // SYNC_PROPERTIES_NONE should have no impact
-        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_NONE);
+        $proxy2->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_NONE);
 
         // Confirm properties changed
         $this->assertEquals('x', $proxy2->getField1());
@@ -155,7 +155,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // Pull in changes from Entity
-        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+        $proxy2->syncData(ProxyConstants::UPDATE_PROXY);
 
         // Confirm changes on proxy
         $this->assertEquals('1', $proxy2->getField1());
@@ -194,7 +194,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy2->getField3());
 
         // Pull changes up from underlying entity
-        $proxy2->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+        $proxy2->syncData(ProxyConstants::UPDATE_PROXY);
 
         // Confirm changes
         $this->assertEquals('1', $proxy2->getField1());
@@ -233,7 +233,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy3->getField3());
 
         // Pull up changes from entity
-        $proxy3->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+        $proxy3->syncData(ProxyConstants::UPDATE_PROXY);
 
         // Confirm Changes
         $this->assertEquals('1', $proxy3->getField1());
@@ -241,7 +241,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy3->getField3());
 
         // Pull All Properties
-        $proxy3->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_ALL);
+        $proxy3->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_ALL);
 
         // Confirm Changes
         $this->assertEquals('1', $proxy3->getField1());
@@ -270,7 +270,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('c', $this->entity4->getField3());
 
         // Sync down changes
-        $proxy4->syncEntity();
+        $proxy4->syncData();
 
         // Confirm entity updated
         $this->assertEquals('x', $this->entity4->getField1());
@@ -288,7 +288,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy4->getField3());
 
         // pull data from entity
-        $proxy4->syncEntity(ProxyConstants::SYNC_FROM_ENTITY);
+        $proxy4->syncData(ProxyConstants::UPDATE_PROXY);
 
         // confirm changes
         $this->assertEquals('1', $proxy4->getField1());
@@ -296,7 +296,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('z', $proxy4->getField3());
 
         // pull all properties
-        $proxy4->syncEntity(ProxyConstants::SYNC_FROM_ENTITY, ProxyConstants::SYNC_PROPERTIES_ALL);
+        $proxy4->syncData(ProxyConstants::UPDATE_PROXY, ProxyConstants::SYNC_PROPERTIES_ALL);
 
         // confirm changes
         $this->assertEquals('1', $proxy4->getField1());

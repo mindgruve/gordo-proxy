@@ -4,20 +4,20 @@
 
 ## Architecture
 Gordo splits the responsibilities of buisness logic and database mapping:
-- First doctrine entity which contains your entity data. (the data transfer object).
-- A second object which acts as a proxy to your entity, and includes all your business logic. (the business domain model).
+- First doctrine data object. (the data transfer object).
+- A second object which acts as a proxy to your data object, and includes all your business logic. (the business domain model).
 - A factory class that allows you to configure and inject dependencies to your proxy object.
 - When you have object associations (one-to-one, many-to-one) these will also be transformed into proxy objects.  
-- Event listeners are registeres for the setters/getters on you proxy object and syncs the data back to your entity.     
+- Event listeners are registeres for the setters/getters on you proxy object and syncs the data back to your data object.     
 
 To Summarize:
 
-        With Gordo, create your Proxy object and interact with it as if it were the original entity.
+        With Gordo, create your Proxy object and interact with it as if it were the original data object.
 
 ## Quick Start - Creating a proxy
-Say we have a User entity, and we want to inject a dependency.
+Say we have a User data object, and we want to inject a dependency.
 
-1. Your entity might look like....
+1. Your doctrine entity might look like....
 
         namespace Gordo\Example;
         
@@ -180,7 +180,7 @@ There are a couple of annotations that you can put on your entity to configure t
      */
 
 
-You can also manually update the entity by calling the method syncEntity() or by accessing the protected property $entity inside your Proxy.
+You can also manually update the entity by calling the method syncData() or by accessing the protected property $entity inside your Proxy.
 
 
 

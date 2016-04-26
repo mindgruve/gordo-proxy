@@ -91,7 +91,7 @@ class AnnotationReader
     }
 
     /**
-     * Default properties that will be copied over to entity when syncEntity is called
+     * Default properties that will be copied over to entity when syncData is called
      * An empty array is interpreted as all properties
      *
      * @param $class
@@ -126,7 +126,7 @@ class AnnotationReader
     }
 
     /**
-     * Methods that will call the entitySync() method
+     * Methods that will call the dataSync() method
      * An empty array is interpreted as all methods
      *
      * @param $class
@@ -150,7 +150,7 @@ class AnnotationReader
      * @param $class
      * @return \Doctrine\ORM\Mapping\ClassMetadata
      */
-    public function getEntityAnnotations($class)
+    public function getDoctrineAnnotations($class)
     {
         return $this->em->getClassMetadata($class);
     }
