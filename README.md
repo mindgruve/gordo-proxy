@@ -172,7 +172,7 @@ The first parameter **$syncDirection** is either:
 **ProxyConstants::UPDATE_PROXY** - which will transfer changes the other way and pull up changes from the doctrine data object --> proxy
 
 The second parameter is either an array of properties to sync or one of 3 constants:  
-**ProxyConstants::SYNC_PROPERTIES_NONE** - which is a noop
+**ProxyConstants::SYNC_PROPERTIES_NONE** - which is a noop   
 **ProxyConstants::SYNC_PROPERTIES_DEFAULT** - which will sync properties defined in the objects @Proxy meta data for syncProperties   
 **ProxyConstants::SYNC_PROPERTIES_ALL** - which will sync all the properties (regardless of what is in the @Proxy meta data)
 
