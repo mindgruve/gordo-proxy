@@ -3,7 +3,6 @@
 namespace Mindgruve\Gordo\Proxy;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -11,9 +10,9 @@ class ProxyManager
 {
 
     /**
-     * @var EntityManagerInterface
+     * @var ObjectManager
      */
-    protected $em;
+    protected $objectManager;
 
     /**
      * @var AnnotationReader
@@ -37,16 +36,16 @@ class ProxyManager
 
 
     /**
-     * @param ObjectManager $manager
+     * @param ObjectManager $objectManager
      * @param AnnotationReader $annotationReader
      */
     public function __construct(
-        ObjectManager $manager,
+        ObjectManager $objectManager,
         AnnotationReader $annotationReader = null
     ) {
-        $this->manager = $manager;
+        $this->objectManager = $objectManager;
         if (!$annotationReader) {
-            $annotationReader = new AnnotationReader($manager);
+            $annotationReader = new AnnotationReader($objectManager);
         }
 
         $this->annotationReader = $annotationReader;

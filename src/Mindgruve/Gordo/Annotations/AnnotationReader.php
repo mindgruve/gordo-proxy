@@ -5,6 +5,7 @@ namespace Mindgruve\Gordo\Annotations;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Annotations\Reader as ReaderInterface;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Mindgruve\Gordo\Proxy\Constants;
@@ -13,10 +14,10 @@ class AnnotationReader
 {
 
     /**
-     * Reference to EntityManager
-     * @var EntityManagerInterface
+     * Reference to ObjectManager
+     * @var ObjectManager
      */
-    protected $em;
+    protected $objectManager;
 
     /**
      * Reference to Annotation Reader
@@ -27,19 +28,19 @@ class AnnotationReader
     /**
      * Constructor
      *
-     * @param EntityManagerInterface $em
+     * @param ObjectManager $objectManager
      * @param ReaderInterface $reader
      * @param array $namespaces
      * @param CacheProvider $cacheProvider
      */
     public function __construct(
-        EntityManagerInterface $em,
+        ObjectManager $objectManager,
         ReaderInterface $reader = null,
         array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Annotations'),
         CacheProvider $cacheProvider = null
     ) {
 
-        $this->em = $em;
+        $this->objectManager = $objectManager;
 
         if (!$reader) {
             $reader = new SimpleAnnotationReader();
@@ -140,6 +141,6 @@ class AnnotationReader
      */
     public function getDoctrineAnnotations($class)
     {
-        return $this->em->getClassMetadata($class);
+        return $this->objectManager->getClassMetadata($class);
     }
 }
