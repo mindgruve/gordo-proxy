@@ -94,7 +94,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxy1 = $sut->transform($this->dataObject1);
@@ -110,7 +110,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
 
@@ -167,7 +167,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxy2 = $sut->transform($this->dataObject2);
@@ -206,7 +206,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxy3 = $sut->transform($this->dataObject3);
@@ -253,7 +253,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxy4 = $sut->transform($this->dataObject4);
@@ -309,7 +309,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxyArray = $sut->transform($array);
@@ -330,7 +330,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array());
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
 
         $sut = new ProxyManager($emMock);
         $proxyArray = $sut->transform($arrayCollection);
@@ -353,7 +353,7 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(array('association1' => array()));
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array('association1'));
 
         $sut = new ProxyManager($emMock);
         $proxy = $sut->transform($this->dataObject1);
@@ -377,8 +377,8 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
         $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
-        $classMetaDataMock->shouldReceive('getAssociationMappings')->andReturn(
-            array('association1' => array(), 'association2' => array())
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(
+            array('association1', 'association2')
         );
 
         $sut = new ProxyManager($emMock);

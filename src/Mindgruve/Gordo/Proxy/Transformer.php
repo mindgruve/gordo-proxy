@@ -72,12 +72,12 @@ class Transformer
         if ($proxyClass != $this->class) {
 
             $doctrineAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
-            $associations = $doctrineAnnotations->getAssociationMappings();
+            $associations = $doctrineAnnotations->getAssociationNames();
 
             /**
              * Lazy Load Associations
              */
-            foreach ($associations as $key => $association) {
+            foreach ($associations as $key) {
                 if (isset($objSrcData[$key])) {
                     $propertyValue = $objSrcData[$key];
                     $factory = new LazyLoadingValueHolderFactory();
