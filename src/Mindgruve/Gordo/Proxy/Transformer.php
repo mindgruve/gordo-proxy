@@ -125,7 +125,8 @@ class Transformer
             /**
              * Throw Exceptions
              */
-            if (!$objDest instanceof $objSrc) {
+            $objSrcClass = $this->annotationReader->getDoctrineProxyResolver()->unwrapDoctrineProxyClass(get_class($objSrc));
+            if (!$objDest instanceof $objSrcClass) {
                 throw new \Exception(
                     'The proxy target class should extend the underlying data object.  Proxy Class: ' . $proxyClass
                 );

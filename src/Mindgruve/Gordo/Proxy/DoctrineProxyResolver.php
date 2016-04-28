@@ -54,4 +54,5 @@ class DoctrineProxyResolver
 
         return $class;
     }
+
 }

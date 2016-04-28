@@ -173,4 +173,9 @@ class AnnotationReader
 
         return $this->objectManager->getClassMetadata($class);
     }
+
+    public function getDoctrineProxyResolver()
+    {
+        return $this->doctrineProxyResolver;
+    }
 }
