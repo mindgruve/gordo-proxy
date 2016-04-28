@@ -12,6 +12,7 @@ use Mindgruve\Gordo\Tests\Entity\TestEntity1;
 use Mindgruve\Gordo\Tests\Entity\TestEntity2;
 use Mindgruve\Gordo\Tests\Entity\TestEntity3;
 use Mindgruve\Gordo\Tests\Entity\TestEntity4;
+use Mindgruve\Gordo\Tests\Entity\TestEntity5;
 use Mindgruve\Gordo\Tests\Entity\TestProxy1;
 use Mindgruve\Gordo\Tests\Entity\TestProxy2;
 use Mindgruve\Gordo\Tests\Entity\TestProxy3;
@@ -43,6 +44,11 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
     protected $dataObject4;
 
     /**
+     * @var TestEntity5
+     */
+    protected $dataObject5;
+
+    /**
      * Data Fixture SETUP
      */
     public function setup()
@@ -70,6 +76,12 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $dataObject4->setField2('b');
         $dataObject4->setField3('c');
         $this->dataObject4 = $dataObject4;
+
+        $dataObject5 = new TestEntity5();
+        $dataObject5->setField1('a');
+        $dataObject5->setField2('b');
+        $dataObject5->setField3('c');
+        $this->dataObject5 = $dataObject5;
 
     }
 
@@ -103,6 +115,22 @@ class ProxyManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('a', $proxy1->getField1());
         $this->assertEquals('b', $proxy1->getField2());
         $this->assertEquals('c', $proxy1->getField3());
+    }
+
+    /**
+     * @Proxy notation not used so transform() should return original object
+     * @throws \Exception
+     */
+    public function testNullTransform()
+    {
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+        $classMetaDataMock = Mockery::mock('Doctrine\ORM\Mapping\ClassMetadata');
+        $emMock->shouldReceive('getClassMetadata')->andReturn($classMetaDataMock);
+        $classMetaDataMock->shouldReceive('getAssociationNames')->andReturn(array());
+
+        $sut = new ProxyManager($emMock);
+        $proxy = $sut->transform($this->dataObject5);
+        $this->assertEquals($this->dataObject5, $proxy);
     }
 
     public function testTransformSyncedEntity1()

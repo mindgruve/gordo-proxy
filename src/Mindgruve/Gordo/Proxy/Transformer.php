@@ -69,6 +69,10 @@ class Transformer
         $objSrcData = $this->hydrator->extract($objSrc);
         $proxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
 
+        if(!$proxyClass){
+            return $objSrc;
+        }
+
         if ($proxyClass != $this->class) {
 
             $doctrineAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
