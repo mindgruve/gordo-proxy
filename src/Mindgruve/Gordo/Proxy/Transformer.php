@@ -3,6 +3,7 @@
 namespace Mindgruve\Gordo\Proxy;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use ProxyManager\Factory\AccessInterceptorValueHolderFactory as Factory;
 use Doctrine\Common\Inflector\Inflector;
 use Mindgruve\Gordo\Annotations\AnnotationReader;
@@ -106,7 +107,7 @@ class Transformer
                         return true;
                     };
 
-                    if ($propertyValue instanceof ArrayCollection) {
+                    if ($propertyValue instanceof Collection) {
                         $objSrcData[$key] = $factory->createProxy(
                             'Doctrine\Common\Collections\ArrayCollection',
                             $initializer
