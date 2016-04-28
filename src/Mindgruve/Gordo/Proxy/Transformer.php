@@ -109,7 +109,7 @@ class Transformer
 
                     if ($propertyValue instanceof Collection) {
                         $objSrcData[$key] = $factory->createProxy(
-                            'Doctrine\Common\Collections\ArrayCollection',
+                            get_class($propertyValue),
                             $initializer
                         );
                     } else {

@@ -9,6 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 use Mindgruve\Gordo\Proxy\Constants;
+use Mindgruve\Gordo\Proxy\DoctrineProxyResolver;
 
 class AnnotationReader
 {
@@ -20,27 +21,36 @@ class AnnotationReader
     protected $objectManager;
 
     /**
+     * @var DoctrineProxyResolver
+     */
+    protected $doctrineProxyResolver;
+
+    /**
      * Reference to Annotation Reader
      * @var CachedReader|ReaderInterface
      */
     protected $reader;
 
     /**
-     * Constructor
-     *
      * @param ObjectManager $objectManager
+     * @param DoctrineProxyResolver $doctrineProxyResolver
      * @param ReaderInterface $reader
      * @param array $namespaces
      * @param CacheProvider $cacheProvider
      */
     public function __construct(
         ObjectManager $objectManager,
+        DoctrineProxyResolver $doctrineProxyResolver = null,
         ReaderInterface $reader = null,
         array $namespaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Annotations'),
         CacheProvider $cacheProvider = null
     ) {
-
         $this->objectManager = $objectManager;
+
+        if (!$doctrineProxyResolver) {
+            $doctrineProxyResolver = new DoctrineProxyResolver();
+        }
+        $this->doctrineProxyResolver = $doctrineProxyResolver;
 
         if (!$reader) {
             $reader = new SimpleAnnotationReader();
@@ -65,6 +75,10 @@ class AnnotationReader
      */
     public function getProxyAnnotations($class)
     {
+        if ($this->doctrineProxyResolver->isDoctrineProxy($class)) {
+            $class = $this->doctrineProxyResolver->unwrapDoctrineProxyClass($class);
+        }
+
         $annotations = $this->reader->getClassAnnotations(new \ReflectionClass($class));
         foreach ($annotations as $annotation) {
             if ($annotation instanceof Proxy) {
@@ -83,6 +97,10 @@ class AnnotationReader
      */
     public function getProxyTargetClass($class)
     {
+        if ($this->doctrineProxyResolver->isDoctrineProxy($class)) {
+            $class = $this->doctrineProxyResolver->unwrapDoctrineProxyClass($class);
+        }
+
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             return $annotations->target;
@@ -100,6 +118,10 @@ class AnnotationReader
      */
     public function getProxySyncedProperties($class)
     {
+        if ($this->doctrineProxyResolver->isDoctrineProxy($class)) {
+            $class = $this->doctrineProxyResolver->unwrapDoctrineProxyClass($class);
+        }
+
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             if ($annotations->syncProperties == array('*')) {
@@ -121,6 +143,10 @@ class AnnotationReader
      */
     public function getProxySyncMethods($class)
     {
+        if ($this->doctrineProxyResolver->isDoctrineProxy($class)) {
+            $class = $this->doctrineProxyResolver->unwrapDoctrineProxyClass($class);
+        }
+
         $annotations = $this->getProxyAnnotations($class);
         if ($annotations) {
             if ($annotations->syncMethods == array('*')) {
@@ -141,6 +167,10 @@ class AnnotationReader
      */
     public function getDoctrineAnnotations($class)
     {
+        if ($this->doctrineProxyResolver->isDoctrineProxy($class)) {
+            $class = $this->doctrineProxyResolver->unwrapDoctrineProxyClass($class);
+        }
+
         return $this->objectManager->getClassMetadata($class);
     }
 }

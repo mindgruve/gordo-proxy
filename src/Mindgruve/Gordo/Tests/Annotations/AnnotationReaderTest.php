@@ -23,13 +23,20 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
         $doctrineReaderMock = Mockery::mock('Doctrine\Common\Annotations\Reader');
         $nameSpaces = array('Doctrine\ORM\Mapping', 'Mindgruve\Gordo\Proxy', 'Test\Namespace');
+        $doctrineProxyResolverMock = Mockery::mock('Mindgruve\Gordo\Proxy\DoctrineProxyResolver');
         $cacheProvider = Mockery::mock('Doctrine\Common\Cache\CacheProvider');
 
         $doctrineReaderMock->shouldReceive('addNamespace')->with('Doctrine\ORM\Mapping');
         $doctrineReaderMock->shouldReceive('addNamespace')->with('Mindgruve\Gordo\Proxy');
         $doctrineReaderMock->shouldReceive('addNamespace')->with('Test\Namespace');
 
-        $sut = new AnnotationReader($emMock, $doctrineReaderMock, $nameSpaces, $cacheProvider);
+        $sut = new AnnotationReader(
+            $emMock,
+            $doctrineProxyResolverMock,
+            $doctrineReaderMock,
+            $nameSpaces,
+            $cacheProvider
+        );
     }
 
     public function testGetProxyAnnotations()

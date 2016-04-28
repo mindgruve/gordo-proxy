@@ -19,6 +19,8 @@ class ProxyManager
      */
     protected $annotationReader;
 
+    protected $doctrineProxyResolver = array();
+
     /**
      * @var array
      */
@@ -38,18 +40,23 @@ class ProxyManager
     /**
      * @param ObjectManager $objectManager
      * @param AnnotationReader $annotationReader
+     * @param array $doctrineProxyNamespaces
      */
     public function __construct(
         ObjectManager $objectManager,
-        AnnotationReader $annotationReader = null
+        AnnotationReader $annotationReader = null,
+        array $doctrineProxyNamespaces = array(
+            'ORM'      => 'Proxies',
+            'PHPCR'    => 'PHPCRProxies',
+            'MongoODM' => 'MongoDBODMProxies',
+        )
     ) {
         $this->objectManager = $objectManager;
         if (!$annotationReader) {
-            $annotationReader = new AnnotationReader($objectManager);
+            $annotationReader = new AnnotationReader($objectManager, new DoctrineProxyResolver($doctrineProxyNamespaces));
         }
 
         $this->annotationReader = $annotationReader;
-
     }
 
     /**
