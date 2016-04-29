@@ -68,13 +68,14 @@ class Transformer
     public function transform($objSrc)
     {
         $objSrcData = $this->hydrator->extract($objSrc);
+        $objSrcClass = $this->annotationReader->getDoctrineProxyResolver()->unwrapDoctrineProxyClass(get_class($objSrc));
         $proxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
 
         if(!$proxyClass){
             return $objSrc;
         }
 
-        if ($proxyClass != $this->class) {
+        if ($proxyClass != $objSrcClass) {
 
             $doctrineAnnotations = $this->annotationReader->getDoctrineAnnotations($this->class);
             $associations = $doctrineAnnotations->getAssociationNames();
@@ -125,7 +126,6 @@ class Transformer
             /**
              * Throw Exceptions
              */
-            $objSrcClass = $this->annotationReader->getDoctrineProxyResolver()->unwrapDoctrineProxyClass(get_class($objSrc));
             if (!$objDest instanceof $objSrcClass) {
                 throw new \Exception(
                     'The proxy target class should extend the underlying data object.  Proxy Class: ' . $proxyClass
