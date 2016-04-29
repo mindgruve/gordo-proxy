@@ -93,7 +93,7 @@ class AnnotationReader
      * The target class to be created
      *
      * @param $class
-     * @return null|string
+     * @return string
      */
     public function getProxyTargetClass($class)
     {
@@ -106,7 +106,7 @@ class AnnotationReader
             return $annotations->target;
         }
 
-        return null;
+        return $class;
     }
 
     /**
