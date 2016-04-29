@@ -123,4 +123,12 @@ class AnnotationReaderTest extends \PHPUnit_Framework_TestCase
         $properties = $sut->getProxySyncMethods('Mindgruve\Gordo\Tests\Entity\TestEntity4');
         $this->assertEquals(array('setField1'), $properties);
     }
+
+    public function testNoProxyAnnotation(){
+        $emMock = Mockery::mock('Doctrine\ORM\EntityManagerInterface');
+
+        $sut = new AnnotationReader($emMock);
+        $properties = $sut->getProxyTargetClass('Mindgruve\Gordo\Tests\Entity\TestEntity5');
+        $this->assertEquals('Mindgruve\Gordo\Tests\Entity\TestEntity5', $properties);
+    }
 }
