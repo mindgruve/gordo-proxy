@@ -108,16 +108,22 @@ class Transformer
                         return true;
                     };
 
-                    if ($propertyValue instanceof Collection) {
-                        $objSrcData[$key] = $factory->createProxy(
-                            get_class($propertyValue),
-                            $initializer
-                        );
+                    // check if property final
+                    $reflectionClass = new \ReflectionClass(get_class($propertyValue));
+                    if($reflectionClass->isFinal()){
+                        $objSrcData[$key] = $propertyValue;
                     } else {
-                        $objSrcData[$key] = $factory->createProxy(
-                            $this->annotationReader->getProxyTargetClass(get_class($propertyValue)),
-                            $initializer
-                        );
+                        if ($propertyValue instanceof Collection) {
+                            $objSrcData[$key] = $factory->createProxy(
+                                get_class($propertyValue),
+                                $initializer
+                            );
+                        } else {
+                            $objSrcData[$key] = $factory->createProxy(
+                                $this->annotationReader->getProxyTargetClass(get_class($propertyValue)),
+                                $initializer
+                            );
+                        }
                     }
                 }
             }
