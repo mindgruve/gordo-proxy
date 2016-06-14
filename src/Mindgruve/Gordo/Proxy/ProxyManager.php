@@ -80,6 +80,8 @@ class ProxyManager
 
         if ($item instanceof ArrayCollection) {
             return $this->transformArrayCollection($item);
+        }elseif($item instanceof \ArrayIterator){
+            return $this->transformArrayIterator($item);
         } elseif (is_array($item)) {
             return $this->transformArray($item, $transformer);
         } elseif (is_object($item)) {
@@ -92,6 +94,10 @@ class ProxyManager
     public function transformArrayCollection(ArrayCollection $arrayCollection)
     {
         return new ArrayCollection($this->transform($arrayCollection->toArray()));
+    }
+
+    public function transformArrayIterator(\ArrayIterator $arrayIterator){
+        return new \ArrayIterator($this->transformArray($arrayIterator->getArrayCopy()));
     }
 
     /**
