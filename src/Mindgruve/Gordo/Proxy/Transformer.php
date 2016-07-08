@@ -67,11 +67,18 @@ class Transformer
      */
     public function transform($objSrc)
     {
+        // No need to transform scalar or null values
+        if (is_scalar($objSrc) || is_null($objSrc)) {
+            return $objSrc;
+        }
+
         $objSrcData = $this->hydrator->extract($objSrc);
-        $objSrcClass = $this->annotationReader->getDoctrineProxyResolver()->unwrapDoctrineProxyClass(get_class($objSrc));
+        $objSrcClass = $this->annotationReader->getDoctrineProxyResolver()->unwrapDoctrineProxyClass(
+            get_class($objSrc)
+        );
         $proxyClass = $this->annotationReader->getProxyTargetClass(get_class($objSrc));
 
-        if(!$proxyClass){
+        if (!$proxyClass) {
             return $objSrc;
         }
 
@@ -110,7 +117,7 @@ class Transformer
 
                     // check if property final
                     $reflectionClass = new \ReflectionClass(get_class($propertyValue));
-                    if($reflectionClass->isFinal()){
+                    if ($reflectionClass->isFinal()) {
                         $objSrcData[$key] = $propertyValue;
                     } else {
                         if ($propertyValue instanceof Collection) {
@@ -134,13 +141,13 @@ class Transformer
              */
             if (!$objDest instanceof $objSrcClass) {
                 throw new \Exception(
-                    'The proxy target class should extend the underlying data object.  Proxy Class: ' . $proxyClass
+                    'The proxy target class should extend the underlying data object.  Proxy Class: '.$proxyClass
                 );
             }
 
             if (!$this->isProxy($objDest)) {
                 throw new \Exception(
-                    'The proxy target class should use the Proxy trait.  Proxy Class: ' . $proxyClass
+                    'The proxy target class should use the Proxy trait.  Proxy Class: '.$proxyClass
                 );
             }
 
@@ -164,15 +171,15 @@ class Transformer
             if ($syncMethods == Constants::SYNC_METHODS_ALL) {
                 $syncMethods = array();
                 foreach (array_keys($objSrcData) as $property) {
-                    $syncMethods[] = Inflector::camelize('set_' . $property);
+                    $syncMethods[] = Inflector::camelize('set_'.$property);
                 }
                 foreach ($associations as $associationKey => $association) {
                     $associationKey = Inflector::singularize($associationKey);
                     $associationKeyPlural = Inflector::pluralize($associationKey);
-                    $syncMethods[] = Inflector::camelize('add_' . $associationKey);
-                    $syncMethods[] = Inflector::camelize('remove_' . $associationKey);
-                    $syncMethods[] = Inflector::camelize('set_' . $associationKeyPlural);
-                    $syncMethods[] = Inflector::camelize('set_' . $associationKey);
+                    $syncMethods[] = Inflector::camelize('add_'.$associationKey);
+                    $syncMethods[] = Inflector::camelize('remove_'.$associationKey);
+                    $syncMethods[] = Inflector::camelize('set_'.$associationKeyPlural);
+                    $syncMethods[] = Inflector::camelize('set_'.$associationKey);
                 }
             } elseif ($syncMethods == Constants::SYNC_METHODS_NONE) {
                 $syncMethods = array();
